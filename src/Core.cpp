@@ -22,13 +22,6 @@ Core::Core(Core const & src)
 }
 
 void
-Core::addRule(Rule	*rule)
-{
-	this->ruleList.push_back(rule);
-	return ;
-}
-
-void
 Core::setFact(char letter)
 {
 	if (letter >= 65 && letter <= 90)
@@ -37,6 +30,13 @@ Core::setFact(char letter)
 		this->fact[letter - 97] = true;
 	else
 		std::cerr << letter << " isn't a letter" << std::endl;
+	return ;
+}
+
+void
+Core::addRule(Rule	*rule)
+{
+	this->ruleList.push_back(rule);
 	return ;
 }
 
@@ -56,8 +56,6 @@ Core::getRule(char letter)
 		++p;
 	}
 	return resultList;
-
-
 }
 
 Core::~Core(void)
