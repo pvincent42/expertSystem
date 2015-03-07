@@ -75,11 +75,11 @@ Core::operator=(Core const & rhs)
 }
 
 std::ostream&
-operator<<(std::ostream &o, Core &i)
+operator<<(std::ostream &o, Core const &i)
 {
 	int		j;
 	char	letter;
-	std::list<Rule *>::iterator p = i.ruleList.begin();
+	std::list<Rule *>::const_iterator p = i.ruleList.begin();
 
 	j = 0;
 	o << "Class : Core " << '\n';

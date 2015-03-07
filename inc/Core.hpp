@@ -25,6 +25,6 @@ class Core
 	private:
 };
 
-std::ostream			&operator<<(std::ostream &o, Core &i);
+std::ostream			&operator<<(std::ostream &o, Core const &i);
 
 #endif
