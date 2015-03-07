@@ -22,6 +22,13 @@ Core::Core(Core const & src)
 }
 
 void
+Core::addRule(Rule	*rule)
+{
+	this->ruleList.push_back(rule);
+	return ;
+}
+
+void
 Core::setFact(char letter)
 {
 	if (letter >= 65 && letter <= 90)
@@ -50,10 +57,12 @@ Core::operator=(Core const & rhs)
 }
 
 std::ostream&
-operator<<(std::ostream &o, Core const &i)
+operator<<(std::ostream &o, Core &i)
 {
 	int		j;
 	char	letter;
+	std::list<Rule *>::iterator p = i.ruleList.begin();
+
 	j = 0;
 	o << "Class : Core " << '\n';
 	o << "Fact :" << '\n';
@@ -61,7 +70,15 @@ operator<<(std::ostream &o, Core const &i)
 	{
 		letter = 'A' + j;
 		o << letter << " " << i.fact[j] << "\n";
-		j++;
+		++j;
+	}
+	j = 0;
+	while (p != i.ruleList.end())
+	{
+
+		o << "Rule " << j << " : " << *(*p) << "\n";
+		++p;
+		++j;
 	}
 	o << std::endl;
 	return (o);
