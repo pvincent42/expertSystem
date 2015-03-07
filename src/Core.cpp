@@ -58,6 +58,33 @@ Core::getRule(char letter)
 	return resultList;
 }
 
+bool
+Core::getOr(char l1, char l2, bool neg1, bool neg2)
+{
+	l1 = toupper(l1);
+	l2 = toupper(l2);
+
+	return (((fact[l1 - 65] + neg1) % 2) || ((fact[l2 - 65] + neg2) % 2));
+}
+
+bool
+Core::getXor(char l1, char l2, bool neg1, bool neg2)
+{
+	l1 = toupper(l1);
+	l2 = toupper(l2);
+
+	return (((fact[l1 - 65] + neg1) % 2) + ((fact[l2 - 65] + neg2) % 2) % 2);
+}
+
+bool
+Core::getAnd(char l1, char l2, bool neg1, bool neg2)
+{
+	l1 = toupper(l1);
+	l2 = toupper(l2);
+
+	return (((fact[l1 - 65] + neg1) % 2) && ((fact[l2 - 65] + neg2) % 2));
+}
+
 Core::~Core(void)
 {
 	return ;
@@ -73,6 +100,7 @@ Core::operator=(Core const & rhs)
 	}
 	return (*this);
 }
+
 
 std::ostream&
 operator<<(std::ostream &o, Core const &i)

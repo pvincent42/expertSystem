@@ -25,14 +25,19 @@ main(int argc, char **argv)
 	newC->setFact('V');
 	newC->setFact('a');
 	std::cout << *newC << std::endl;
-	getRuleTest = newC->getRule('z');
+	getRuleTest = newC->getRule('E');
 	std::list<Rule *>::iterator p = getRuleTest.begin();
 	while (p != getRuleTest.end())
 	{
 		std::cout << *(*p) << std::endl;
 		++p;
 	}
-
+	std::cout << newC->getAnd('V', 'a', 1, 1) << std::endl;
+	std::cout << newC->getAnd('V', 'e', 0, 1) << std::endl;
+	std::cout << newC->getOr('V', 'e', 1 , 0) << std::endl;
+	std::cout << newC->getXor('V', 'e', 1, 0) << std::endl;
+	std::cout << newC->getXor('V', 'a', 0, 1) << std::endl;
+	std::cout << newC->getXor('e', 'b', 0, 1) << std::endl;
 	(void)argc;
 	(void)argv;
 

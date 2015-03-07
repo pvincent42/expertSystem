@@ -18,6 +18,9 @@ class Core
 
 		void				setFact(char letter);
 		void				addRule(Rule *rule);
+		bool				getAnd(char l1, char l2, bool neg1, bool neg2);
+		bool				getOr(char l1, char l2, bool neg1, bool neg2);
+		bool				getXor(char l1, char l2, bool neg1, bool neg2);
 		std::list<Rule *>	getRule(char letter);
 
 		Core & operator = (Core const & rhs);
