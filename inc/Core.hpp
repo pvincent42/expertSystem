@@ -18,6 +18,7 @@ class Core
 
 		void				setFact(char letter);
 		void				addRule(Rule *rule);
+		std::list<Rule *>	getRule(char letter);
 
 		Core & operator = (Core const & rhs);
 

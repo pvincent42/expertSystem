@@ -40,6 +40,26 @@ Core::setFact(char letter)
 	return ;
 }
 
+std::list <Rule *>
+Core::getRule(char letter)
+{
+	std::size_t					result;
+	std::list<Rule *>			resultList;
+	std::list<Rule *>::iterator	p = this->ruleList.begin();
+
+	letter = toupper(letter);
+	while (p != this->ruleList.end())
+	{
+		result = (*p)->result.find(letter);
+		if (result != std::string::npos)
+			resultList.push_back(*p);
+		++p;
+	}
+	return resultList;
+
+
+}
+
 Core::~Core(void)
 {
 	return ;

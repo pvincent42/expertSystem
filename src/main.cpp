@@ -10,9 +10,9 @@ main(int argc, char **argv)
 	std::string		test2;
 	std::string		test3;
 	std::string		test4;
-
+	std::list<Rule *>	getRuleTest;
 	test = "A + B";
-	test2 = " C";
+	test2 = " E";
 	test3 = "D + R";
 	test4 = " E";
 	Rule			newR(test, test2);
@@ -25,6 +25,14 @@ main(int argc, char **argv)
 	newC->addRule(&newR);
 	newC->addRule(&newR2);
 	std::cout << *newC << std::endl;
+	getRuleTest = newC->getRule('e');
+	std::list<Rule *>::iterator p = getRuleTest.begin();
+	while (p != getRuleTest.end())
+	{
+		std::cout << *(*p) << std::endl;
+		++p;
+	}
+
 	(void)argc;
 	(void)argv;
 
