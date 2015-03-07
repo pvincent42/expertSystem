@@ -18,6 +18,7 @@ class Core
 
 		void				setFact(char letter);
 		void				addRule(Rule *rule);
+
 		Core & operator = (Core const & rhs);
 
 	private:
