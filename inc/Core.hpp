@@ -24,6 +24,7 @@ class Core
 		bool				getOr(char l1, char l2, bool neg1, bool neg2);
 		bool				getXor(bool l1, bool l2, bool neg1, bool neg2);
 		bool				getXor(char l1, char l2, bool neg1, bool neg2);
+		bool				getState(char letter);
 		std::list<Rule *>	getRule(char letter);
 
 		Core & operator = (Core const & rhs);

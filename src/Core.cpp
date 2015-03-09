@@ -103,6 +103,12 @@ Core::getAnd(char l1, char l2, bool neg1, bool neg2)
 	return (((fact[l1 - 65] + neg1) % 2) && ((fact[l2 - 65] + neg2) % 2));
 }
 
+bool
+Core::getState(char letter)
+{
+	return (fact[toupper(letter) - 65]);
+}
+
 Core::~Core(void)
 {
 	return ;
