@@ -10,7 +10,7 @@ OBJS		=	$(patsubst %.cpp, $(OBJ_PATH)%.o,$(SRCS))
 PLATFORM	:=	$(shell uname)
 CC			=	g++
 HEADER		=	-I./$(INC_PATH)
-FLAGS		=	-Ofast -g -Wall -Wextra -Werror -lm -Wno-deprecated-declarations -std=gnu++11 -Wno-unused
+FLAGS		=	-Ofast -g -Wall -Wextra -Werror -Wno-deprecated-declarations -std=gnu++11 -Wno-unused
 
 NAME		=	expertSys
 
@@ -21,15 +21,11 @@ endif
 all: $(NAME)
 
 $(NAME): $(OBJS)
-ifeq "$(PLATFORM)" "Darwin"
-	@$(CC) $(FLAGS) $(VARS) $(HEADER) $(SDL) $(GL) $(OBJS) -o $(NAME)
-else ifeq "$(PLATFORM)" "Linux"
-	@$(CC) $(FLAGS) $(VARS) $(HEADER) $(OBJS) -o $(NAME) $(SDL) $(GL)
-endif
+	@$(CC) $(FLAGS) $(VARS) $(HEADER) $(OBJS) -o $(NAME)
 
 $(patsubst %, $(OBJ_PATH)%,%.o): $(SRC_PATH)$(notdir %.cpp)
 	@mkdir -p $(OBJ_PATH)
-	@$(CC) -c $(FLAGS) $(VARS) $(HEADER) $(SDL) $(GL) "$<" -o "$@"
+	@$(CC) -c $(FLAGS) $(VARS) $(HEADER) "$<" -o "$@"
 
 clean:
 	@rm -rf $(OBJ_PATH)
