@@ -59,12 +59,24 @@ Core::getRule(char letter)
 }
 
 bool
+Core::getOr(bool l1, bool l2, bool neg1, bool neg2)
+{
+	return (((l1 + neg1) % 2) || ((l2 + neg2) % 2));
+}
+
+bool
 Core::getOr(char l1, char l2, bool neg1, bool neg2)
 {
 	l1 = toupper(l1);
 	l2 = toupper(l2);
 
 	return (((fact[l1 - 65] + neg1) % 2) || ((fact[l2 - 65] + neg2) % 2));
+}
+
+bool
+Core::getXor(bool l1, bool l2, bool neg1, bool neg2)
+{
+	return (((l1 + neg1) % 2) + ((l2 + neg2) % 2) % 2);
 }
 
 bool
@@ -77,12 +89,24 @@ Core::getXor(char l1, char l2, bool neg1, bool neg2)
 }
 
 bool
+Core::getAnd(bool l1, bool l2, bool neg1, bool neg2)
+{
+	return (((l1 + neg1) % 2) && ((l2 + neg2) % 2));
+}
+
+bool
 Core::getAnd(char l1, char l2, bool neg1, bool neg2)
 {
 	l1 = toupper(l1);
 	l2 = toupper(l2);
 
 	return (((fact[l1 - 65] + neg1) % 2) && ((fact[l2 - 65] + neg2) % 2));
+}
+
+bool
+Core::getState(char letter)
+{
+	return (fact[toupper(letter) - 65]);
 }
 
 Core::~Core(void)
