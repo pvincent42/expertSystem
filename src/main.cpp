@@ -19,7 +19,6 @@ main(int argc, char **argv)
 	Rule			newR2(test3, test4);
 	Core			*newC = new Core;
 
-
 	newC->addRule(&newR);
 	newC->addRule(&newR2);
 	newC->setFact('V', 1);
@@ -40,6 +39,5 @@ main(int argc, char **argv)
 	std::cout << newC->getXor('e', 'b', 0, 1) << std::endl;
 	(void)argc;
 	(void)argv;
-
 	return (0);
 }
