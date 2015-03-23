@@ -9,6 +9,7 @@ Core::Core(void)
 	while (i < 26)
 	{
 		this->facts[i] = false;
+		this->verified[i] = false;
 		i++;
 	}
 	std::cerr << this->parser.parseInputFile("inputs/input1", this->facts, &this->queries, &this->rules) << std::endl;
@@ -22,20 +23,58 @@ Core::Core(Core const & src)
 	return ;
 }
 
-void
-Core::setFact(char letter)
+bool
+Core::checkValidity(char letter, bool result)
 {
-	if (letter >= 65 && letter <= 90)
-		this->facts[letter - 65] = true;
-	else if (letter >= 97 && letter <= 122)
-		this->facts[letter - 97] = true;
+	bool		test1;
+	bool		test2;
+
+	if (this->verified[letter - 65] == 1)
+	{
+		if (this->facts[letter - 65] == result)
+			return (true);
+		else
+			return (false);
+	}
+//		if ((!this->fact[letter - 65] && result) || (this->fact[letter - 65] && result))
+//		{
+//			std::cout << "Ok et je set a vrai" << std::endl;
+//			this->fact[letter - 65] = true;
+//			return (true);
+//		}
+//		else if (!this->fact[letter - 65] && !result)
+//		{
+//			std::cout << "ok et je set a faux" << std::endl;
+//			return (true);
+//		}
 	else
-		std::cerr << letter << " isn't a letter" << std::endl;
+	{
+		this->facts[letter - 65] = result;
+		this->verified[letter - 65] = true;
+		return (true);
+	}
+//	else
+//		std::cout << " Nope nope nope" << std::endl;
+//		return (false);
+
+}
+
+void
+Core::setFact(char letter, bool result)
+{
+	if (this->checkValidity(letter, result))
+		this->facts[letter - 65] = result;
+	else
+		std::cerr << std::boolalpha <<
+			letter << " was first " <<
+			facts[letter - 65] <<
+			" and you try to set it at " <<
+			result << std::endl;
 	return ;
 }
 
 void
-Core::addRule(Rule	*rule)
+Core::addRule(Rule *rule)
 {
 	this->rules.push_back(rule);
 	return ;

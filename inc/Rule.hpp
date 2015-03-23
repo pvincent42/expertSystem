@@ -12,8 +12,8 @@ class Rule
 		Rule(Rule const & src);
 		~Rule(void);
 
-		std::string			inference;
-		std::string			result;
+		std::string			inference; // "A + B"
+		std::string			result; // "C"
 
 		Rule & operator = (Rule const & rhs);
 

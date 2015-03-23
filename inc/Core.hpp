@@ -17,10 +17,12 @@ class Core
 		~Core(void);
 
 		bool				facts[26];
+		bool				verified[26];
 		std::list<char>		queries;
 		std::list<Rule *>	rules;
 
-		void				setFact(char letter);
+		bool				checkValidity(char lettre, bool result);
+		void				setFact(char letter, bool result);
 		void				addRule(Rule *rule);
 		bool				getAnd(bool l1, bool l2, bool neg1, bool neg2);
 		bool				getAnd(char l1, char l2, bool neg1, bool neg2);

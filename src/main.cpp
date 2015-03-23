@@ -21,8 +21,8 @@ main(int argc, char **argv)
 
 	newC->addRule(&newR);
 	newC->addRule(&newR2);
-	newC->setFact('V');
-	newC->setFact('a');
+	newC->setFact('V', 1);
+	newC->setFact('A', 1);
 	std::cout << *newC << std::endl;
 	getRuleTest = newC->getRule('E');
 	std::list<Rule *>::iterator p = getRuleTest.begin();
@@ -31,12 +31,15 @@ main(int argc, char **argv)
 		std::cout << *(*p) << std::endl;
 		++p;
 	}
-	std::cout << newC->getAnd('V', 'a', 1, 1) << std::endl;
-	std::cout << newC->getAnd('V', 'e', 0, 1) << std::endl;
-	std::cout << newC->getOr('V', 'e', 1 , 0) << std::endl;
-	std::cout << newC->getXor('V', 'e', 1, 0) << std::endl;
-	std::cout << newC->getXor('V', 'a', 0, 1) << std::endl;
-	std::cout << newC->getXor('e', 'b', 0, 1) << std::endl;*/
+	std::cout << newC->getAnd('V', 'A', 1, 1) << std::endl;
+	std::cout << newC->getAnd('V', 'E', 0, 1) << std::endl;
+	std::cout << newC->getOr('V', 'E', 1 , 0) << std::endl;
+	std::cout << newC->getXor('V', 'E', 1, 0) << std::endl;
+	std::cout << newC->getXor('V', 'A', 0, 1) << std::endl;
+	std::cout << newC->getXor('e', 'B', 0, 1) << std::endl;
+	newC->setFact('A', 0);
+	newC->setFact('A', 1);
+	*/
 	(void)argc;
 	(void)argv;
 	return (0);
