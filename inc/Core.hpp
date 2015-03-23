@@ -4,17 +4,21 @@
 
 # include <iostream>
 # include <list>
-# include <Rule.hpp>
+# include "Rule.hpp"
+# include "Parser.hpp"
 
 class Core
 {
 	public:
+		Parser		parser;
+
 		Core(void);
 		Core(Core const & src);
 		~Core(void);
 
-		bool				fact[26];
-		std::list<Rule *>	ruleList;
+		bool				facts[26];
+		std::list<char>		queries;
+		std::list<Rule *>	rules;
 
 		void				setFact(char letter);
 		void				addRule(Rule *rule);

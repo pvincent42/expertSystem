@@ -11,13 +11,13 @@ main(int argc, char **argv)
 	std::string			test4;
 	std::list<Rule *>	getRuleTest;
 
-	test = "A + B";
+	Core			*newC = new Core();
+/*	test = "A + B";
 	test2 = " A";
 	test3 = "D + R";
 	test4 = " E";
 	Rule			newR(test, test2);
 	Rule			newR2(test3, test4);
-	Core			*newC = new Core;
 
 	newC->addRule(&newR);
 	newC->addRule(&newR2);
@@ -36,7 +36,7 @@ main(int argc, char **argv)
 	std::cout << newC->getOr('V', 'e', 1 , 0) << std::endl;
 	std::cout << newC->getXor('V', 'e', 1, 0) << std::endl;
 	std::cout << newC->getXor('V', 'a', 0, 1) << std::endl;
-	std::cout << newC->getXor('e', 'b', 0, 1) << std::endl;
+	std::cout << newC->getXor('e', 'b', 0, 1) << std::endl;*/
 	(void)argc;
 	(void)argv;
 	return (0);
