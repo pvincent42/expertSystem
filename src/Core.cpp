@@ -13,6 +13,8 @@ Core::Core(void)
 		i++;
 	}
 	std::cerr << this->parser.parseInputFile("inputs/input1", this->facts, &this->queries, &this->rules) << std::endl;
+	this->setTrue();
+	this->setFalse();
 	return ;
 }
 
@@ -43,6 +45,21 @@ Core::checkValidity(char letter, bool result)
 		return (true);
 	}
 }
+
+
+void
+Core::setTrue(void)
+{
+	std::list<char>::iterator	it = this->queries.begin();
+
+	while (it != this->queries.end())
+	{
+		this->setFact(*it, 1);
+		it++;
+	}
+	return ;
+}
+
 
 bool
 Core::setFact(char letter, bool result)

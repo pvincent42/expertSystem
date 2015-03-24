@@ -12,6 +12,7 @@ main(int argc, char **argv)
 	std::list<Rule *>	getRuleTest;
 
 	Core			*newC = new Core();
+	std::cout << *newC << std::endl;
 /*	test = "A + B";
 	test2 = " A";
 	test3 = "D + R";
