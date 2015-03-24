@@ -21,8 +21,9 @@ main(int argc, char **argv)
 
 	newC->addRule(&newR);
 	newC->addRule(&newR2);
-	newC->setFact('V', 1);
 	newC->setFact('A', 1);
+	newC->setFact('V', 1);
+	newC->setFalse();
 	std::cout << *newC << std::endl;
 	getRuleTest = newC->getRule('E');
 	std::list<Rule *>::iterator p = getRuleTest.begin();

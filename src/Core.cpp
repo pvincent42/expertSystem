@@ -35,41 +35,49 @@ Core::checkValidity(char letter, bool result)
 		else
 			return (false);
 	}
-//		if ((!this->fact[letter - 65] && result) || (this->fact[letter - 65] && result))
-//		{
-//			std::cout << "Ok et je set a vrai" << std::endl;
-//			this->fact[letter - 65] = true;
-//			return (true);
-//		}
-//		else if (!this->fact[letter - 65] && !result)
-//		{
-//			std::cout << "ok et je set a faux" << std::endl;
-//			return (true);
-//		}
 	else
 	{
 		this->fact[letter - 65] = result;
 		this->verified[letter - 65] = true;
 		return (true);
 	}
-//	else
-//		std::cout << " Nope nope nope" << std::endl;
-//		return (false);
-
 }
 
-void
+bool
 Core::setFact(char letter, bool result)
 {
 	if (this->checkValidity(letter, result))
+	{
 		this->fact[letter - 65] = result;
+		this->verified[letter - 65] = true;
+		return true;
+	}
 	else
+	{
 		std::cerr << std::boolalpha <<
 			letter << " was first " <<
 			fact[letter - 65] <<
 			" and you try to set it at " <<
 			result << std::endl;
-	return ;
+		return (false);
+	}
+}
+
+
+void
+Core::setFalse(void)
+{
+	char				i;
+	std::list<Rule *>	result;
+
+	i = 'A';
+	while (i <= 'Z')
+	{
+		result = this->getRule(i);
+		if (result.size() == 0 && !this->verified[i - 65])
+			this->setFact(i, false);
+		i++;
+	}
 }
 
 void
@@ -178,7 +186,7 @@ operator<<(std::ostream &o, Core const &i)
 	while (j < 26)
 	{
 		letter = 'A' + j;
-		o << letter << " " << i.fact[j] << "\n";
+		o << letter << " " << std::boolalpha << i.fact[j] << " verified " << i.verified[j] << "\n";
 		++j;
 	}
 	j = 0;

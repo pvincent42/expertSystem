@@ -18,7 +18,9 @@ class Core
 		std::list<Rule *>	ruleList;
 
 		bool				checkValidity(char lettre, bool result);
-		void				setFact(char letter, bool result);
+		void				setTrue(void);
+		void				setFalse(void);
+		bool				setFact(char letter, bool result);
 		void				addRule(Rule *rule);
 		bool				getAnd(bool l1, bool l2, bool neg1, bool neg2);
 		bool				getAnd(char l1, char l2, bool neg1, bool neg2);
