@@ -204,7 +204,10 @@ operator<<(std::ostream &o, Core const &i)
 	while (j < 26)
 	{
 		letter = 'A' + j;
-		o << letter << " " << std::boolalpha << i.facts[j] << " verified " << i.verified[j] << "\n";
+		o << letter << " " << std::boolalpha << i.facts[j];
+		if (i.verified[j])
+			o << " verified";
+		o << "\n";
 		++j;
 	}
 	j = 0;
