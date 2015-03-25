@@ -12,9 +12,8 @@ Core::Core(void)
 		this->verified[i] = false;
 		i++;
 	}
+	this->parser.parseInputFile("inputs/input1", this->facts, this->verified, &this->queries, &this->rules);
 	this->setFalse();
-	this->parser.parseInputFile("inputs/input1", this->facts, &this->queries, &this->rules);
-	this->setTrue();
 	return ;
 }
 

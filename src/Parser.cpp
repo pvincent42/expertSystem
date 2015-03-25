@@ -32,7 +32,7 @@ get_file_contents(const std::string &filename)
 }
 
 int
-Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char> *queries, std::list<Rule *> *rules)
+Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified, std::list<char> *queries, std::list<Rule *> *rules)
 {
 	char			c;
 	std::string		*current_rule = 0;
@@ -110,7 +110,10 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 				if (c != ' ' && c != '\t')
 				{
 					if (c >= 'A' && c <= 'Z')
+					{
 						facts[c - 'A'] = true;
+						verified[c - 'A'] = true;
+					}
 					else
 					{
 						std::cerr << "Wrong fact : [" << c << "]" << std::endl;
