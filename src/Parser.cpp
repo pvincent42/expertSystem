@@ -43,7 +43,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 	int				i;
 	int				file_length;
 
-	file = get_file_contents(filename);
+	// check file
 	if (access(filename.c_str(), R_OK) == -1)
 	{
 		perror(filename.c_str());
@@ -55,13 +55,18 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 		return (OPEN_FILE_ERROR);
 	}
 	(void)rules;
+	// read file in a string
+	file = get_file_contents(filename);
 	file_length = file.length();
+	// begin parsing
 	for (i = 0; i < file_length; ++i)
 	{
+		// each iteration works on a single character
 		c = file[i];
 		act = true;
 		if (c == '\n')
 		{
+			// add rule
 			if (state == GET_RULES && current_rule)
 			{
 				if (current_rule->length() != 0)
@@ -71,7 +76,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 		}
 		else if (c == '#')
 		{
-			// skip line
+			// search for end of line
 			for (; i < file_length; ++i)
 			{
 				c = file[i];
@@ -79,6 +84,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 				{
 					act = false;
 					state = GET_RULES;
+
 					i--;
 					break ;
 				}
@@ -96,6 +102,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 			state = GET_QUERIES;
 			act = false;
 		}
+		// do not "act" on this character, ['\n', '=', '?']
 		if (act)
 		{
 			if (state == GET_FACTS)
@@ -118,7 +125,10 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 					if (c >= 'A' && c <= 'Z')
 						queries->push_back(c);
 					else
+					{
+						std::cerr << "Wrong query : [" << c << "]" << std::endl;
 						return (WRONG_QUERY);
+					}
 				}
 			}
 			else
@@ -162,13 +172,6 @@ Parser::ruleCharValid(char const &c)
 	return (false);
 }
 
-// A+B+C
-// !(A+B)+C^D
-// A^B^C
-// B^C|D
-// A+B^C+D
-// A|B|C|D
-// (A+B)^C|B
 // notes:
 // - go through string and check for invalid characters, eventually return an error.
 // - go through string and check ^, |, (
