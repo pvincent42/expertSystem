@@ -179,15 +179,24 @@ Parser::ruleCharValid(char const &c)
 // -- when you get a ( go to the first ), creating a string for recursive call
 // -- push onto the stack
 
+// at this point all characters are valid
 int
 Parser::buildInference(std::string const &r, int &i, int const &length)
 {
 	for (; i < length; ++i)
 	{
-		if (!ruleCharValid(r[i]))
-			return (0);
+		(void)r[i];
 	}
 	return (1);
+}
+
+bool
+Parser::checkInferenceErrors(std::string const &r, int const &rule_length)
+{
+	for (int i = 0; i < rule_length; ++i)
+		if (!ruleCharValid(r[i]))
+			return (false);
+	return (true);
 }
 
 int
@@ -199,6 +208,8 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 
 	(void)rules;
 	i = 0;
+	if (!checkInferenceErrors(r, rule_length))
+		return (0);
 	buildInference(r, i, rule_length);
 	return (1);
 }
