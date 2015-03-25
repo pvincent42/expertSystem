@@ -28,8 +28,8 @@ Rule::operator=(Rule const & rhs)
 {
 	if (this != &rhs)
 	{
-			this->inference = rhs.inference;
-			this->result = rhs.result;
+		this->inference = rhs.inference;
+		this->result = rhs.result;
 	}
 	return (*this);
 }
