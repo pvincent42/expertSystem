@@ -158,7 +158,7 @@ Parser::ruleCharValid(char const &c)
 		|| c == '!'
 		|| c == '('
 		|| c == ')')
-		return (true)
+		return (true);
 	return (false);
 }
 
@@ -182,21 +182,22 @@ Parser::buildInference(std::string const &r, int &i, int const &length)
 	for (; i < length; ++i)
 	{
 		if (!ruleCharValid(r[i]))
-			return (false);
+			return (0);
 	}
+	return (1);
 }
 
 int
 Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 {
 	int						i;
-	int						rule_length;
+	int	 const				rule_length = r.length();
 	std::string				result;
 
 	(void)rules;
-	rule_length = rule->length();
 	i = 0;
-	buildInference(r, i);
+	buildInference(r, i, rule_length);
+	return (1);
 }
 
 Parser &
