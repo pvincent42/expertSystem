@@ -103,7 +103,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 				if (c != ' ' && c != '\t')
 				{
 					if (c >= 'A' && c <= 'Z')
-						facts[c - 65] = true;
+						facts[c - 'A'] = true;
 					else
 					{
 						std::cerr << "Wrong fact : [" << c << "]" << std::endl;
@@ -137,7 +137,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 	}
 	// parse rules
 	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
-		this->parseRawRule(*it, rules);
+		this->parseRawRule(*(*it), rules);
 #ifdef _DEBUG
 	// print parsed data
 	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
@@ -148,18 +148,37 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 	return (PARSE_SUCCESS);
 }
 
-void
-Parser::parseRawRule(std::string *rule, std::list<Rule *> *rules)
+bool
+Parser::ruleCharValid(char const &c)
 {
-	int				i;
-	int				rule_length;
+	if ((c >= 'A' && c <= 'Z')
+		|| c == '+'
+		|| c == '^'
+		|| c == '|'
+		|| c == '!'
+		|| c == '('
+		|| c == ')')
+		return (true)
+	return (false);
+}
+
+bool
+Parser::buildInference(std::string const &r, int &i, std::string &result)
+{
+	
+}
+
+int
+Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
+{
+	int						i;
+	int						rule_length;
+	std::string				result;
 
 	(void)rules;
 	rule_length = rule->length();
-	for (i = 0; i < rule_length; ++i)
-	{
-		
-	}
+	i = 0;
+	buildInference(r, i);
 }
 
 Parser &
