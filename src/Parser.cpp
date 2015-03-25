@@ -59,7 +59,8 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 	file = get_file_contents(filename);
 	file_length = file.length();
 	// begin parsing
-	for (i = 0; i < file_length; ++i)
+	i = 0;
+	while (i < file_length)
 	{
 		// each iteration works on a single character
 		c = file[i];
@@ -142,6 +143,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 					*current_rule += c;
 			}
 		}
+		++i;
 	}
 	if (state == GET_RULES && current_rule)
 	{
@@ -183,24 +185,20 @@ Parser::printParsingError(std::string const &msg, int const &code)
 }
 
 // at this point all characters are valid
+// given inference, creates RPN
 int
-Parser::buildInference(std::string const &r)
+Parser::buildRPN(std::string const &i, std::string &rpn)
 {
-	int const		length = r.length();
-	std::string		tmp[2];
-	std::string		part;
 	int				i;
-	int				j;
+	int const		length = i.length();
 
+	// just in case
+	rpn.clear();
+	// start parsing
 	for (i = 0; i < length; ++i)
 	{
-		if (r[i] == '^' || r[i] == '|')
-		{
-			if (!i || i == length - 1)
-				return (printParsingError("ERROR", 1));
-		}
+		
 	}
-	return (1);
 }
 
 bool
