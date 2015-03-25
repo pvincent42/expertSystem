@@ -2,22 +2,14 @@ SRC_PATH	=	src/
 OBJ_PATH	=	obj/
 INC_PATH	=	inc/
 GCC_LOG		=	gcc_log_file.log
-
 SRCS		=	$(shell ls $(SRC_PATH) | grep .cpp$$)
 OBJS		=	$(patsubst %.cpp, $(OBJ_PATH)%.o,$(SRCS))
-
 PLATFORM	:=	$(shell uname)
 CC			=	g++
 HEADER		=	-I./$(INC_PATH)
 FLAGS		=	-Ofast -g -Wall -Wextra -Werror -Wno-deprecated-declarations -std=gnu++11 -Wno-unused
-
 VARS		=	-D_DEBUG
-
 NAME		=	expertSys
-
-ifeq "$(PLATFORM)" "WIN32"
-NAME		+=	.exe
-endif
 
 all: $(NAME)
 

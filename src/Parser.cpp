@@ -194,7 +194,7 @@ int
 Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 {
 	int						i;
-	int	 const				rule_length = r.length();
+	int const				rule_length = r.length();
 	std::string				result;
 
 	(void)rules;
@@ -216,6 +216,6 @@ std::ostream&
 operator<<(std::ostream &o, Parser const &i)
 {
 	(void)i;
-	o << "Class : Parser" << std::endl;
+	o << "Class : Parser : " << &i << std::endl;
 	return (o);
 }
