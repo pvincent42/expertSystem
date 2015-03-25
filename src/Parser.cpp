@@ -145,9 +145,6 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 		raw_rules.push_back(current_rule);
 		current_rule = 0;
 	}
-	// parse rules
-	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
-		this->parseRawRule(*(*it), rules);
 #ifdef _DEBUG
 	// print parsed data
 	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
@@ -155,6 +152,9 @@ Parser::parseInputFile(std::string const &filename, bool *facts, std::list<char>
 	for (std::list<char>::iterator it = queries->begin(); it != queries->end(); it++)
 		std::cerr << "query : [" << *it << "]" << std::endl;
 #endif
+	// parse rules
+	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
+		this->parseRawRule(*(*it), rules);
 	return (PARSE_SUCCESS);
 }
 
@@ -172,26 +172,47 @@ Parser::ruleCharValid(char const &c)
 	return (false);
 }
 
+int
+Parser::printParsingError(std::string const &msg, int const &code)
+{
+	std::cerr << msg << std::endl;
+	return (code);
+}
+
 // at this point all characters are valid
 int
-Parser::buildInference(std::string const &r, int &i, int const &length)
+Parser::buildInference(std::string const &r)
 {
-	std::string		tmp;
+	int const		length = r.length();
+	std::string		tmp[2];
+	std::string		part;
+	int				i;
+	int				j;
 
-	for (; i < length; ++i)
+	for (i = 0; i < length; ++i)
 	{
 		if (r[i] == '^' || r[i] == '|')
-			;
+		{
+			if (!i || i == length - 1)
+				return (printParsingError("ERROR", 1));
+		}
 	}
 	return (1);
 }
 
 bool
-Parser::checkInferenceErrors(std::string const &r, int const &rule_length)
+Parser::getInferenceFromRule(std::string const &r, int const &rule_length, std::string &inference)
 {
 	for (int i = 0; i < rule_length; ++i)
+	{
+		if (r[i] == '=' && i + 1 < rule_length && r[i + 1] == '>')
+		{
+			inference = r.substr(0, i);
+			return (true);
+		}
 		if (!ruleCharValid(r[i]))
 			return (false);
+	}
 	return (true);
 }
 
@@ -200,13 +221,15 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 {
 	int						i;
 	int const				rule_length = r.length();
-	std::string				result;
+	std::string				inference;
 
 	(void)rules;
 	i = 0;
-	if (!checkInferenceErrors(r, rule_length))
+	// only checks for character validity
+	if (!getInferenceFromRule(r, rule_length, inference))
 		return (0);
-	buildInference(r, i, rule_length);
+	std::cerr << "<" << inference << ">" << std::endl;
+	buildInference(inference);
 	return (1);
 }
 
