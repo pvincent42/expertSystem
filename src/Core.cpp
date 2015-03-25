@@ -12,9 +12,9 @@ Core::Core(void)
 		this->verified[i] = false;
 		i++;
 	}
-	std::cerr << this->parser.parseInputFile("inputs/input1", this->facts, &this->queries, &this->rules) << std::endl;
-	this->setTrue();
 	this->setFalse();
+	this->parser.parseInputFile("inputs/input1", this->facts, &this->queries, &this->rules);
+	this->setTrue();
 	return ;
 }
 
@@ -30,18 +30,14 @@ Core::checkValidity(char letter, bool result)
 {
 	bool		test1;
 	bool		test2;
+	int const	index = letter - 'A';
 
-	if (this->verified[letter - 65] == 1)
-	{
-		if (this->facts[letter - 65] == result)
-			return (true);
-		else
-			return (false);
-	}
+	if (this->verified[index] == true)
+		return (this->facts[index] == result);
 	else
 	{
-		this->facts[letter - 65] = result;
-		this->verified[letter - 65] = true;
+		this->facts[index] = result;
+		this->verified[index] = true;
 		return (true);
 	}
 }
@@ -54,7 +50,7 @@ Core::setTrue(void)
 
 	while (it != this->queries.end())
 	{
-		this->setFact(*it, 1);
+		this->setFact(*it, true);
 		it++;
 	}
 	return ;
@@ -64,17 +60,19 @@ Core::setTrue(void)
 bool
 Core::setFact(char letter, bool result)
 {
+	int const		index = letter - 'A';
+
 	if (this->checkValidity(letter, result))
 	{
-		this->facts[letter - 65] = result;
-		this->verified[letter - 65] = true;
-		return true;
+		this->facts[index] = result;
+		this->verified[index] = true;
+		return (true);
 	}
 	else
 	{
 		std::cerr << std::boolalpha <<
 			letter << " was first " <<
-			facts[letter - 65] <<
+			facts[index] <<
 			" and you try to set it at " <<
 			result << std::endl;
 		return (false);
@@ -134,8 +132,7 @@ Core::getOr(char l1, char l2, bool neg1, bool neg2)
 {
 	l1 = toupper(l1);
 	l2 = toupper(l2);
-
-	return (((facts[l1 - 65] + neg1) % 2) || ((facts[l2 - 65] + neg2) % 2));
+	return (((facts[l1 - 'A'] + neg1) % 2) || ((facts[l2 - 'A'] + neg2) % 2));
 }
 
 bool
@@ -150,7 +147,7 @@ Core::getXor(char l1, char l2, bool neg1, bool neg2)
 	l1 = toupper(l1);
 	l2 = toupper(l2);
 
-	return (((facts[l1 - 65] + neg1) % 2) + ((facts[l2 - 65] + neg2) % 2) % 2);
+	return (((facts[l1 - 'A'] + neg1) % 2) + ((facts[l2 - 'A'] + neg2) % 2) % 2);
 }
 
 bool
@@ -165,13 +162,13 @@ Core::getAnd(char l1, char l2, bool neg1, bool neg2)
 	l1 = toupper(l1);
 	l2 = toupper(l2);
 
-	return (((facts[l1 - 65] + neg1) % 2) && ((facts[l2 - 65] + neg2) % 2));
+	return (((facts[l1 - 'A'] + neg1) % 2) && ((facts[l2 - 'A'] + neg2) % 2));
 }
 
 bool
 Core::getState(char letter)
 {
-	return (facts[toupper(letter) - 65]);
+	return (facts[toupper(letter) - 'A']);
 }
 
 Core::~Core(void)
@@ -184,8 +181,6 @@ Core::operator=(Core const & rhs)
 {
 	if (this != &rhs)
 	{
-			//// PUT VALUE HERE
-			//// this-> val = rhs.getVal();
 	}
 	return (*this);
 }
