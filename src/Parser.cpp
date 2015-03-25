@@ -172,20 +172,16 @@ Parser::ruleCharValid(char const &c)
 	return (false);
 }
 
-// notes:
-// - go through string and check for invalid characters, eventually return an error.
-// - go through string and check ^, |, (
-// -- when you get a ^ or a | go back to the first + or ) and go forth to the first + or (
-// -- when you get a ( go to the first ), creating a string for recursive call
-// -- push onto the stack
-
 // at this point all characters are valid
 int
 Parser::buildInference(std::string const &r, int &i, int const &length)
 {
+	std::string		tmp;
+
 	for (; i < length; ++i)
 	{
-		(void)r[i];
+		if (r[i] == '^' || r[i] == '|')
+			;
 	}
 	return (1);
 }
