@@ -3,12 +3,15 @@
 # define	TREE_HPP
 
 # include <iostream>
+# include <string>
 # include <list>
 
 class Tree
 {
 	public:
 		std::list<Tree *>		children;
+		std::string				inference;
+		bool					eval;
 
 		Tree(void);
 		~Tree(void);
