@@ -162,10 +162,28 @@ Parser::ruleCharValid(char const &c)
 	return (false);
 }
 
-bool
-Parser::buildInference(std::string const &r, int &i, std::string &result)
+// A+B+C
+// !(A+B)+C^D
+// A^B^C
+// B^C|D
+// A+B^C+D
+// A|B|C|D
+// (A+B)^C|B
+// notes:
+// - go through string and check for invalid characters, eventually return an error.
+// - go through string and check ^, |, (
+// -- when you get a ^ or a | go back to the first + or ) and go forth to the first + or (
+// -- when you get a ( go to the first ), creating a string for recursive call
+// -- push onto the stack
+
+int
+Parser::buildInference(std::string const &r, int &i, int const &length)
 {
-	
+	for (; i < length; ++i)
+	{
+		if (!ruleCharValid(r[i]))
+			return (false);
+	}
 }
 
 int
