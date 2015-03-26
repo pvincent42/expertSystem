@@ -189,7 +189,7 @@ Parser::printParsingError(std::string const &msg, int const &code)
 int
 Parser::buildRPN(std::string const &f, std::string &rpn)
 {
-	register int		i, j;
+	int					i, j;
 	int const			length = f.length();
 	int					result;
 	char				o;
@@ -197,7 +197,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	static char const	opr = ['!', '+', '|', '^'] // operators (sorted by priority)
 	int					stack_size;
 	bool				stack[3]; // to keep track of the results
-	
+	std::list<int>		opl; // operators stack
 
 	// just in case
 	rpn.clear();
@@ -212,14 +212,12 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 		}
 		else
 		{
+			// check for operator and push his index in the operator stack
 			for (j = 0; j < 4; ++j)
 			{
 				if (f[i] == opr[j])
 				{
-					if (stack_size > arg[j])
-					{
-
-					}
+					opl.push_back(j);
 					break ;
 				}
 			}
