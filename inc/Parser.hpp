@@ -25,7 +25,7 @@ class Parser
 
 		bool							ruleCharValid(char const &c);
 		bool							getInferenceFromRule(std::string const &r, int const &rule_length, std::string &inference);
-		int								buildInference(std::string const &r);
+		int								buildRPN(std::string const &f, std::string &rpn);
 		int								printParsingError(std::string const &msg, int const &code);
 };
 

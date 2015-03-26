@@ -187,19 +187,48 @@ Parser::printParsingError(std::string const &msg, int const &code)
 // at this point all characters are valid
 // given inference, creates RPN
 int
-Parser::buildRPN(std::string const &i, std::string &rpn)
+Parser::buildRPN(std::string const &f, std::string &rpn)
 {
-	int				i;
-	int const		length = i.length();
+	register int		i, j;
+	int const			length = f.length();
+	int					result;
+	char				o;
+	static int const	arg = [1, 2, 2, 2]; // number of operands (sorted by priority)
+	static char const	opr = ['!', '+', '|', '^'] // operators (sorted by priority)
+	int					stack_size;
+	bool				stack[3]; // to keep track of the results
+	
 
 	// just in case
 	rpn.clear();
-	// start parsing
+	// build rpn for later evaluation, and get immediate result
+	stack_size = 0;
 	for (i = 0; i < length; ++i)
 	{
-		
+		if (f[i] >= 'A' && f[i] <= 'Z')
+		{
+			rpn += f[i];
+			++stack_size;
+		}
+		else
+		{
+			for (j = 0; j < 4; ++j)
+			{
+				if (f[i] == opr[j])
+				{
+					if (stack_size > arg[j])
+					{
+
+					}
+					break ;
+				}
+			}
+		}
 	}
+	return (1);
 }
+
+// ! 33, + 43, | 124, ^ 94 
 
 bool
 Parser::getInferenceFromRule(std::string const &r, int const &rule_length, std::string &inference)
@@ -223,14 +252,15 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 	int						i;
 	int const				rule_length = r.length();
 	std::string				inference;
+	std::string				rpn;
 
 	(void)rules;
 	i = 0;
 	// only checks for character validity
 	if (!getInferenceFromRule(r, rule_length, inference))
 		return (0);
-	std::cerr << "<" << inference << ">" << std::endl;
-	buildInference(inference);
+	buildRPN(inference, rpn);
+	std::cerr << "inference: " << inference << " -- RPN: " << rpn << std::endl;
 	return (1);
 }
 
