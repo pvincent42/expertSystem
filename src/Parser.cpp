@@ -178,7 +178,7 @@ Parser::ruleCharValid(char const &c)
 }
 
 int
-Parser::printParsingError(std::string const &msg, int const &code)
+Parser::printError(std::string const &msg, int const &code)
 {
 	std::cerr << msg << std::endl;
 	return (code);
@@ -191,35 +191,27 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 {
 	int					i, j;
 	int const			length = f.length();
-	int					result;
 	char				o;
-	static int const	arg = [1, 2, 2, 2]; // number of operands (sorted by priority)
-	static char const	opr = ['!', '+', '|', '^'] // operators (sorted by priority)
-	int					stack_size;
-	bool				stack[3]; // to keep track of the results
-	std::list<int>		opl; // operators stack
+	static int const	op_n = 4; // number of operators
+	static char const	opr[4][3] = {{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
+									 {'+', 3, 0},
+									 {'|', 2, 0},
+									 {'^', 1, 0}}; // operators (sorted by priority)
+	std::list<char>		os; // operator stack
 
 	// just in case
 	rpn.clear();
-	// build rpn for later evaluation, and get immediate result
-	stack_size = 0;
+	// build rpn for later evaluation
 	for (i = 0; i < length; ++i)
 	{
 		if (f[i] >= 'A' && f[i] <= 'Z')
-		{
 			rpn += f[i];
-			++stack_size;
-		}
 		else
 		{
 			// check for operator and push his index in the operator stack
-			for (j = 0; j < 4; ++j)
+			for (j = 0; j < op_n; ++j)
 			{
-				if (f[i] == opr[j])
-				{
-					opl.push_back(j);
-					break ;
-				}
+				
 			}
 		}
 	}
