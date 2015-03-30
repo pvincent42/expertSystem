@@ -219,14 +219,18 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 						ite = os.end();
 						for (it = os.begin(); it != ite; ++it)
 						{
-							if (!opr[j][2] && opr[j][1] <= opr[*it][1])
+							if ((!opr[j][2] && opr[j][1] <= opr[*it][1])
+								|| (opr[j][2] && opr[j][1] < opr[*it][1]))
 							{
-								
+								rpn += opr[os.front()][0];
+								os.pop_front();
 							}
+							os.push_front(j);
 						}
 					}
 					else
 						os.push_front(j);
+					break;
 				}
 			}
 		}
