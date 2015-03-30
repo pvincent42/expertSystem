@@ -3,7 +3,6 @@
 # define	RULE_HPP
 
 # include <iostream>
-# include "Tree.hpp"
 
 class Rule
 {
