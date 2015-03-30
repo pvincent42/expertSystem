@@ -201,8 +201,6 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	std::list<int>::iterator		it, ite;
 	int								err;
 
-	// just in case
-	rpn.clear();
 	// build rpn for later evaluation
 	for (i = 0; i < length; ++i)
 	{
@@ -251,34 +249,12 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 			}
 			else if (f[i] == ')')
 			{
-				// store the index in case of mismatched parenthesis
-				err = i;
-				//
-				for (it = os.begin(); it != os.end(); ++it)
+				it = os.begin();
+				while (os.size() == 0 || *it == '(')
 				{
-					std::cerr << "-- " << *it << std::endl;
-					// in case of left parenthesis
-					if (*it == op_n)
-					{
-						std::cerr << "Nop !" << *it << std::endl;
-						os.pop_front();
-						err = -1;
-						break;
-					}
-					else
-					{
-						std::cerr << "Woup " << *it << std::endl;
-						rpn += opr[*it][0];
-						it++;
-						os.pop_front();
-					}
-					std::cerr << "it : " << *it << std::endl;
-				}
-				// err not set to -1 = mismatched parenthesis
-				if (err != -1)
-				{
-					std::cerr << "Mismatched parenthesis at column `" << err << "`" << std::endl;
-					return (0);
+					rpn += opr[*it][0];
+					it++;
+					os.pop_front();
 				}
 			}
 		}
