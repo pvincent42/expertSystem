@@ -199,6 +199,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 												 {'^', 1, 0}}; // operators sorted by priority
 	std::list<int>					os; // operator stack
 	std::list<int>::iterator		it, ite;
+	int								err;
 
 	// just in case
 	rpn.clear();
@@ -209,7 +210,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 			rpn += f[i];
 		else
 		{
-			// check for operator and push his index in the operator stack
+			// check for array operator
 			for (j = 0; j < op_n; ++j)
 			{
 				if (f[i] == opr[j][0])
@@ -219,22 +220,62 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 						ite = os.end();
 						for (it = os.begin(); it != ite; ++it)
 						{
-							if ((!opr[j][2] && opr[j][1] <= opr[*it][1])
-								|| (opr[j][2] && opr[j][1] < opr[*it][1]))
+							std::cerr << *it << std::endl;
+							// operator isn't a left parenthesis
+							if (*it != op_n)
 							{
-								rpn += opr[os.front()][0];
-								os.pop_front();
+								// 
+								if ((!opr[j][2] && opr[j][1] <= opr[*it][1])
+									|| (opr[j][2] && opr[j][1] < opr[*it][1]))
+								{
+									rpn += opr[*it][0];
+									os.erase(it);
+								}
 							}
-							os.push_front(j);
 						}
+						os.push_front(j);
 					}
 					else
 						os.push_front(j);
 					break;
 				}
 			}
+			if (f[i] == '(')
+			{
+				// push the left parenthesis on the operator stack with an index outside of the operator array
+				os.push_front(op_n);
+			}
+			else if (f[i] == ')')
+			{
+				// store the index in case of mismatched parenthesis
+				err = i;
+				//
+				ite = os.end();
+				for (it = os.begin(); it != ite; ++it)
+				{
+					// in case of left parenthesis
+					if (*it == op_n)
+					{
+						os.erase(it);
+						err = -1;
+						break;
+					}
+					else
+					{
+						rpn += opr[*it][0];
+						os.erase(it);
+					}
+				}
+				// err not set to -1 = mismatched parenthesis
+				if (err != -1)
+				{
+					std::cerr << "Mismatched parenthesis at column `" << err << "`" << std::endl;
+					return (0);
+				}
+			}
 		}
 	}
+	//
 	return (1);
 }
 
