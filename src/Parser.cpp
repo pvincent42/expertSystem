@@ -217,9 +217,9 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 				{
 					if (os.size() > 0)
 					{
-						ite = os.end();
-						for (it = os.begin(); it != ite; ++it)
+						for (it = os.begin(); it != os.end(); ++it)
 						{
+							std::cerr << "size: " << os.size() << std::endl;
 							std::cerr << *it << std::endl;
 							// operator isn't a left parenthesis
 							if (*it != op_n)
@@ -237,6 +237,10 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 					}
 					else
 						os.push_front(j);
+					// debug
+					for (it = os.begin(); it != os.end(); ++it)
+						std::cerr << *it << ", ";
+					std::cerr << std::endl;
 					break;
 				}
 			}
@@ -250,21 +254,25 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 				// store the index in case of mismatched parenthesis
 				err = i;
 				//
-				ite = os.end();
-				for (it = os.begin(); it != ite; ++it)
+				for (it = os.begin(); it != os.end(); ++it)
 				{
+					std::cerr << "-- " << *it << std::endl;
 					// in case of left parenthesis
 					if (*it == op_n)
 					{
-						os.erase(it);
+						std::cerr << "Nop !" << *it << std::endl;
+						os.pop_front();
 						err = -1;
 						break;
 					}
 					else
 					{
+						std::cerr << "Woup " << *it << std::endl;
 						rpn += opr[*it][0];
-						os.erase(it);
+						it++;
+						os.pop_front();
 					}
+					std::cerr << "it : " << *it << std::endl;
 				}
 				// err not set to -1 = mismatched parenthesis
 				if (err != -1)
