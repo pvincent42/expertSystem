@@ -193,7 +193,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	int const						length = f.length();
 	char							o;
 	static int const				op_n = 3; // number of operators
-	static char const				opr[op_n][3] = {//{'!', 4, 0}, // operator / precedence / associativity (Left:0, Right:1)
+	static char const				opr[op_n][3] = {//{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
 												 {'+', 3, 0},
 												 {'|', 2, 0},
 												 {'^', 1, 0}}; // operators sorted by priority
@@ -232,18 +232,6 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 					}
 					else
 						os.push_front(j);
-					// debug
-					for (it = os.begin();;)
-					{
-						std::cerr << *it;
-						if (++it != os.end())
-							std::cerr << ", ";
-						else
-						{
-							std::cerr << std::endl;
-							break ;
-						}
-					}
 					break;
 				}
 			}
@@ -254,15 +242,32 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 			}
 			else if (f[i] == ')')
 			{
-				it = os.begin();
-				while (os.size() == 0 || *it == '(')
+				for (it = os.begin(); it != os.end(); it++)
 				{
-					rpn += opr[*it][0];
-					it++;
-					os.pop_front();
+					if (*it == op_n)
+					{
+						os.pop_front();
+						break ;
+					}
+					else
+					{
+						rpn += opr[*it][0];
+						os.pop_front();
+					}
 				}
 			}
 		}
+		// print separator
+		std::cerr << "----- step -----" << std::endl;
+		// print token
+		std::cerr << "token : " << f[i] << std::endl;
+		// print RPN
+		std::cerr << "rpn   : " << rpn << std::endl;
+		// print operator stack
+		std::cerr << "stack : ";
+		for (it = os.begin(); it != os.end(); ++it)
+			std::cerr << (*it < op_n ? opr[*it][0] : '(');
+		std::cerr << std::endl;
 	}
 	if (os.size() > 0)
 	{
