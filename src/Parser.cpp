@@ -192,8 +192,8 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	int								i, j;
 	int const						length = f.length();
 	char							o;
-	static int const				op_n = 3; // number of operators
-	static char const				opr[op_n][3] = {//{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
+	static int const				op_n = 4; // number of operators
+	static char const				opr[op_n][3] = {{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
 												 {'+', 3, 0},
 												 {'|', 2, 0},
 												 {'^', 1, 0}}; // operators sorted by priority
@@ -217,12 +217,9 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 					{
 						for (it = os.begin(); it != os.end(); ++it)
 						{
-							std::cerr << "size: " << os.size() << std::endl;
-							std::cerr << *it << std::endl;
 							// operator isn't a left parenthesis
 							if (*it != op_n)
 							{
-								// 
 								if ((!opr[j][2] && opr[j][1] <= opr[*it][1])
 									|| (opr[j][2] && opr[j][1] < opr[*it][1]))
 								{
@@ -257,6 +254,17 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 					os.pop_front();
 				}
 			}
+		}
+	}
+	if (os.size() > 0)
+	{
+		ite = os.end();
+		for (it = os.begin(); it != ite; ++it)
+		{
+			if (*it == op_n)
+				return (printError("Mismatched parenthesis !", 0));
+			rpn += opr[*it][0];
+			os.erase(it);
 		}
 	}
 	//
