@@ -54,7 +54,6 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		std::cerr << "Can't open file: " << filename << std::endl;
 		return (OPEN_FILE_ERROR);
 	}
-	(void)rules;
 	// read file in a string
 	file = get_file_contents(filename);
 	file_length = file.length();
@@ -194,9 +193,9 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	char							o;
 	static int const				op_n = 4; // number of operators
 	static char const				opr[op_n][3] = {{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
-												 {'+', 3, 0},
-												 {'|', 2, 0},
-												 {'^', 1, 0}}; // operators sorted by priority
+													{'+', 3, 0},
+													{'|', 2, 0},
+													{'^', 1, 0}}; // operators sorted by priority
 	std::list<int>					os; // operator stack
 	std::list<int>::iterator		it, ite;
 	int								err;
@@ -255,6 +254,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 				}
 			}
 		}
+#ifdef _DEBUG
 		// print separator
 		std::cerr << "----- step -----" << std::endl;
 		// print token
@@ -266,6 +266,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 		for (it = os.begin(); it != os.end(); ++it)
 			std::cerr << (*it < op_n ? opr[*it][0] : '(');
 		std::cerr << std::endl;
+#endif
 	}
 	if (os.size() > 0)
 	{
@@ -306,15 +307,18 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 	int						i;
 	int const				rule_length = r.length();
 	std::string				inference;
+	std::string				implied;
 	std::string				rpn;
+	Rule					*rule;
 
-	(void)rules;
 	i = 0;
 	// only checks for character validity
 	if (!getInferenceFromRule(r, rule_length, inference))
 		return (0);
 	buildRPN(inference, rpn);
 	std::cerr << "inference: " << inference << " -- RPN: " << rpn << std::endl;
+	rule = new Rule(inference, implied, rpn);
+	rules->push_back(rule);
 	return (1);
 }
 

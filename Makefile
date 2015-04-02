@@ -8,7 +8,8 @@ PLATFORM	:=	$(shell uname)
 CC			=	g++
 HEADER		=	-I./$(INC_PATH)
 FLAGS		=	-Ofast -g -Wall -Wextra -Werror -Wno-deprecated-declarations -std=gnu++11 -Wno-unused
-VARS		=	-D_DEBUG
+VARS		=
+#-D_DEBUG
 NAME		=	expertSys
 
 all: $(NAME)

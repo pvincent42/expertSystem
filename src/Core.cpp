@@ -3,7 +3,8 @@
 
 Core::Core(void)
 {
-	int		i;
+	int								i;
+	std::list<Rule *>::iterator		it, ite;
 
 	i = 0;
 	while (i < 26)
@@ -14,6 +15,13 @@ Core::Core(void)
 	}
 	this->parser.parseInputFile("inputs/input1", this->facts, this->verified, &this->queries, &this->rules);
 	this->setFalse();
+	ite = rules.end();
+	for (it = rules.begin(); it != ite; it++)
+	{
+		std::cerr << (*it)->rpn << ": ";
+		this->evaluateInference((*it)->rpn);
+		std::cerr << std::endl;
+	}
 	return ;
 }
 
@@ -41,7 +49,6 @@ Core::checkValidity(char letter, bool result)
 	}
 }
 
-
 void
 Core::setTrue(void)
 {
@@ -54,7 +61,6 @@ Core::setTrue(void)
 	}
 	return ;
 }
-
 
 bool
 Core::setFact(char letter, bool result)
@@ -78,6 +84,44 @@ Core::setFact(char letter, bool result)
 	}
 }
 
+void
+Core::evaluateInference(std::string const &rpn)
+{
+	std::list<bool>					vs; // values stack
+	size_t							i;
+	bool							res;
+
+	i = 0;
+	while (i < rpn.size())
+	{
+		if (rpn[i] >= 'A' && rpn[i] <= 'Z')
+			vs.push_front(this->facts[rpn[i] - 'A']);
+		else if (vs.size() > 1)
+		{
+			if (rpn[i] == '!')
+				vs.front() = !vs.front();
+			else
+			{
+				res = vs.front();
+				vs.pop_front();
+				if (rpn[i] == '+')
+					vs.front() &= res;
+				else if (rpn[i] == '|')
+					vs.front() |= res;
+				else if (rpn[i] == '^')
+					vs.front() ^= res;
+			}
+		}
+		else if (vs.size() > 0 && rpn[i] == '!')
+			vs.front() = !vs.front();
+		i++;
+	}
+	//debug
+	std::list<bool>::iterator		it;
+
+	for (it = vs.begin(); it != vs.end(); it++)
+		std::cerr << *it;
+}
 
 void
 Core::setFalse(void)
@@ -112,7 +156,7 @@ Core::getRule(char letter)
 	letter = toupper(letter);
 	while (p != this->rules.end())
 	{
-		result = (*p)->result.find(letter);
+		result = (*p)->implied.find(letter);
 		if (result != std::string::npos)
 			resultList.push_back(*p);
 		++p;
