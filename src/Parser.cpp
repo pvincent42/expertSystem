@@ -217,15 +217,13 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 					{
 						for (it = os.begin(); it != os.end(); ++it)
 						{
-							// operator isn't a left parenthesis
-							if (*it != op_n)
+							if (*it == op_n)
+								break;
+							if ((!opr[j][2] && opr[j][1] <= opr[*it][1])
+								|| (opr[j][2] && opr[j][1] < opr[*it][1]))
 							{
-								if ((!opr[j][2] && opr[j][1] <= opr[*it][1])
-									|| (opr[j][2] && opr[j][1] < opr[*it][1]))
-								{
-									rpn += opr[*it][0];
-									os.erase(it);
-								}
+								rpn += opr[*it][0];
+								os.erase(it);
 							}
 						}
 						os.push_front(j);
@@ -242,12 +240,12 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 			}
 			else if (f[i] == ')')
 			{
-				for (it = os.begin(); it != os.end(); it++)
+				for (it = os.begin(); it != os.end(); it = os.begin())
 				{
 					if (*it == op_n)
 					{
 						os.pop_front();
-						break ;
+						break;
 					}
 					else
 					{
