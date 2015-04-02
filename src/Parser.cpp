@@ -192,8 +192,8 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	int								i, j;
 	int const						length = f.length();
 	char							o;
-	static int const				op_n = 3; // number of operators
-	static char const				opr[op_n][3] = {//{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
+	static int const				op_n = 4; // number of operators
+	static char const				opr[op_n][3] = {{'!', 4, 1}, // operator / precedence / associativity (Left:0, Right:1)
 												 {'+', 3, 0},
 												 {'|', 2, 0},
 												 {'^', 1, 0}}; // operators sorted by priority

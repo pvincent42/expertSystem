@@ -20,7 +20,7 @@
 # hardcore rules (nonsense, just for debugging the parser)
 
 #!A + B | (C ^ B) | !A + !(C + (G ^ !H)) => B + C + V
-!(A+B)	|(C + B) | (A + !B) + C ^ (A + (C | D + (D ^ A))) => A			# hohoho
+!(!(A+!B)	|(C + B) | (A + !B) + C ^ (A + (C | D + (D ^ A)))) => A			# hohoho
 
 
 				   
