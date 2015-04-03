@@ -3,6 +3,7 @@
 # define	PARSER_HPP
 
 # include <iostream>
+# include <sstream>
 # include <fstream>
 # include <list>
 # include "Constants.hpp"
@@ -24,9 +25,11 @@ class Parser
 		Parser(Parser const & src);
 
 		bool							ruleCharValid(char const &c);
-		bool							getInferenceFromRule(std::string const &r, int const &rule_length, std::string &inference);
+		bool							getPartsFromRule(std::string const &r, int const &rule_length, std::string &inference, std::string &implied);
 		int								buildRPN(std::string const &f, std::string &rpn);
+		int								printError(std::ostream &msg, int const &code);
 		int								printError(std::string const &msg, int const &code);
+
 };
 
 std::ostream			&operator<<(std::ostream &o, Parser const &i);

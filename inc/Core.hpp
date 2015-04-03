@@ -13,7 +13,7 @@ class Core
 		Parser		parser;
 
 		Core(void);
-		Core(Core const & src);
+		Core(int &ac, char **av);
 		~Core(void);
 
 		bool				facts[26];
@@ -39,6 +39,7 @@ class Core
 		Core & operator = (Core const & rhs);
 
 	private:
+		Core(Core const & src);
 };
 
 std::ostream			&operator<<(std::ostream &o, Core const &i);
