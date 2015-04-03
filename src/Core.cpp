@@ -11,8 +11,6 @@ Core::Core(int &ac, char **av)
 	int								i, j;
 	std::list<Rule *>::iterator		it, ite;
 
-	(void)ac;
-	(void)av;
 	if (ac < 2)
 	{
 		std::cerr << "You must provide an input file !" << std::endl;
@@ -23,13 +21,13 @@ Core::Core(int &ac, char **av)
 	for (j = 1; j < ac; ++j)
 	{
 		std::cout << "----- " << av[j] << " -----" << std::endl;
+		for (i = 0; i < 26; ++i)
+		{
+			this->facts[i] = false;
+			this->verified[i] = false;
+		}
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 		{
-			for (i = 0; i < 26; ++i)
-			{
-				this->facts[i] = false;
-				this->verified[i] = false;
-			}
 			this->setFalse();
 			ite = rules.end();
 			for (it = rules.begin(); it != ite; it++)
@@ -37,6 +35,13 @@ Core::Core(int &ac, char **av)
 				std::cerr << (*it)->rpn << ": ";
 				this->evaluateInference((*it)->rpn);
 				std::cerr << std::endl;
+			}
+			if (rules.size() > 0)
+			{
+				ite = rules.end();
+				for (it = rules.begin(); it != ite; ++it)
+					delete *it;
+				rules.clear();
 			}
 		}
 	}
