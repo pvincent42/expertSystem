@@ -23,6 +23,7 @@ Core::Core(int &ac, char **av)
 	this->parser.parseInputFile("inputs/input4", this->facts, this->verified, &this->queries, &this->rules);
 	for (j = 1; j < ac; ++j)
 	{
+		this->parser.clean();
 		std::cout << "----- " << av[j] << " -----" << std::endl;
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 		{
@@ -87,60 +88,6 @@ Core::tmp(void)
 		i++;
 	}
 }
-
-
-bool
-Core::checkValidity(char letter, bool result)
-{
-	bool		test1;
-	bool		test2;
-	int const	index = letter - 'A';
-
-	if (this->verified[index] == true)
-		return (this->facts[index] == result);
-	else
-	{
-		this->facts[index] = result;
-		this->verified[index] = true;
-		return (true);
-	}
-}
-
-void
-Core::setTrue(void)
-{
-	std::list<char>::iterator	it = this->queries.begin();
-
-	while (it != this->queries.end())
-	{
-		this->setFact(*it, true);
-		it++;
-	}
-	return ;
-}
-
-bool
-Core::setFact(char letter, bool result)
-{
-	int const		index = letter - 'A';
-
-	if (this->checkValidity(letter, result))
-	{
-		this->facts[index] = result;
-		this->verified[index] = true;
-		return (true);
-	}
-	else
-	{
-		std::cerr << std::boolalpha <<
-			letter << " was first " <<
-			facts[index] <<
-			" and you try to set it at " <<
-			result << std::endl;
-		return (false);
-	}
-}
-
 int
 Core::evaluateInference(std::string const &rpn)
 {
@@ -183,7 +130,7 @@ Core::evaluateInference(std::string const &rpn)
 		std::cerr << *it;
 	}*/
 }
-
+/*
 void
 Core::setFalse(void)
 {
@@ -198,13 +145,6 @@ Core::setFalse(void)
 			this->setFact(i, false);
 		i++;
 	}
-}
-
-void
-Core::addRule(Rule *rule)
-{
-	this->rules.push_back(rule);
-	return ;
 }
 
 std::list <Rule *>
@@ -224,49 +164,7 @@ Core::getRule(char letter)
 	}
 	return resultList;
 }
-
-bool
-Core::getOr(bool l1, bool l2, bool neg1, bool neg2)
-{
-	return (((l1 + neg1) % 2) || ((l2 + neg2) % 2));
-}
-
-bool
-Core::getOr(char l1, char l2, bool neg1, bool neg2)
-{
-	return (((facts[l1 - 'A'] + neg1) % 2) || ((facts[l2 - 'A'] + neg2) % 2));
-}
-
-bool
-Core::getXor(bool l1, bool l2, bool neg1, bool neg2)
-{
-	return (((l1 + neg1) % 2) + ((l2 + neg2) % 2) % 2);
-}
-
-bool
-Core::getXor(char l1, char l2, bool neg1, bool neg2)
-{
-	return (((facts[l1 - 'A'] + neg1) % 2) + ((facts[l2 - 'A'] + neg2) % 2) % 2);
-}
-
-bool
-Core::getAnd(bool l1, bool l2, bool neg1, bool neg2)
-{
-	return (((l1 + neg1) % 2) && ((l2 + neg2) % 2));
-}
-
-bool
-Core::getAnd(char l1, char l2, bool neg1, bool neg2)
-{
-	return (((facts[l1 - 'A'] + neg1) % 2) && ((facts[l2 - 'A'] + neg2) % 2));
-}
-
-bool
-Core::getState(char letter)
-{
-	return (facts[toupper(letter) - 'A']);
-}
-
+*/
 Core::~Core(void)
 {
 	return ;
@@ -302,7 +200,7 @@ operator<<(std::ostream &o, Core const &i)
 		++j;
 	}
 	j = 0;
-	o << "\nListe des règles :\n";
+	o << "\nRules list :\n";
 	while (p != i.rules.end())
 	{
 

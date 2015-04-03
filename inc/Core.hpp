@@ -22,20 +22,12 @@ class Core
 		std::list<Rule *>	rules;
 
 		int					evaluateInference(std::string const &rpn);
-		bool				checkValidity(char lettre, bool result);
-		void				setTrue(void);
 		void				tmp(void);
-		void				setFalse(void);
-		bool				setFact(char letter, bool result);
-		void				addRule(Rule *rule);
-		bool				getAnd(bool l1, bool l2, bool neg1, bool neg2);
-		bool				getAnd(char l1, char l2, bool neg1, bool neg2);
-		bool				getOr(bool l1, bool l2, bool neg1, bool neg2);
-		bool				getOr(char l1, char l2, bool neg1, bool neg2);
-		bool				getXor(bool l1, bool l2, bool neg1, bool neg2);
-		bool				getXor(char l1, char l2, bool neg1, bool neg2);
-		bool				getState(char letter);
-		std::list<Rule *>	getRule(char letter);
+		// bool				checkValidity(char lettre, bool result);
+		// void				setTrue(void);
+		// void				setFalse(void);
+		// bool				setFact(char letter, bool result);
+		// std::list<Rule *>	getRule(char letter);
 
 		Core & operator = (Core const & rhs);
 

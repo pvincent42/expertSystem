@@ -18,6 +18,7 @@ class Parser
 		~Parser(void);
 		int								parseInputFile(std::string const &filename, bool *facts, bool *verified, std::list<char> *queries, std::list<Rule *> *rules);
 		int								parseRawRule(std::string const &rule, std::list<Rule *> *rules);
+		void							clean(void);
 
 		Parser & operator = (Parser const & rhs);
 
