@@ -10,6 +10,7 @@ Parser::Parser(void)
 
 Parser::~Parser(void)
 {
+	this->clean();
 	return ;
 }
 
@@ -34,14 +35,16 @@ get_file_contents(const std::string &filename)
 int
 Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified, std::list<char> *queries, std::list<Rule *> *rules)
 {
-	char			c;
-	std::string		*current_rule = 0;
-	int				state = GET_RULES;
-	bool			act = false;
-	struct stat		buffer;
-	std::string		file;
-	int				i;
-	int				file_length;
+	char									c;
+	std::string								*current_rule = 0;
+	int										state = GET_RULES;
+	bool									act = false;
+	struct stat								buffer;
+	std::string								file;
+	int										i;
+	int										file_length;
+	std::list<std::string *>::iterator		it_s, ite_s;
+	std::list<char>::iterator				it_c, ite_c;
 
 	// check file
 	if (access(filename.c_str(), R_OK) == -1)
@@ -81,7 +84,6 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 				{
 					act = false;
 					state = GET_RULES;
-
 					i--;
 					break ;
 				}
@@ -140,23 +142,54 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		raw_rules.push_back(current_rule);
 		current_rule = 0;
 	}
-	// check
+	// check raw rules
+	if (raw_rules.size() == 0)
+		return (printError("No rules !", NO_RULES));
+	i = 0;
+	it_s = raw_rules.begin();
+	ite_s = raw_rules.end();
+	while (it_s != ite_s)
+	{
+		if ((*it_s)->size() == 0)
+			return (printError(std::ostringstream().flush() << "Rule " << i << " is empty !", EMPTY_RULE));
+		++it_s;
+		++i;
+	}
+	// check queries and facts
+	for (i = 0; i < 26; ++i)
+		if (facts[i])
+			break;
+	if (i == 26)
+		return (printError("No facts !", WRONG_FACT));
+	if (queries->size() == 0)
+		return (printError("No queries !", WRONG_QUERY));
 #ifdef _DEBUG
 	// print parsed data
-	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
-		std::cerr << "rule  : [" << *(*it) << "]" << std::endl;
-	for (std::list<char>::iterator it = queries->begin(); it != queries->end(); it++)
-		std::cerr << "query : [" << *it << "]" << std::endl;
+	for (it_s = raw_rules.begin(); it_s != raw_rules.end(); it_s++)
+		std::cerr << "rule  : [" << *(*it_s) << "]" << std::endl;
+	for (it_c = queries->begin(); it_c != queries->end(); it_c++)
+		std::cerr << "query : [" << *it_c << "]" << std::endl;
 #endif
-	std::list<std::string *>::iterator	it;
 	// parse rules
-	for (it = raw_rules.begin(); it != raw_rules.end(); it++)
-		this->parseRawRule(*(*it), rules);
+	for (it_s = raw_rules.begin(); it_s != raw_rules.end(); it_s++)
+		if (!this->parseRawRule(*(*it_s), rules))
+			return (PARSE_FAIL);
 	// delete raw rules
-	for (it = raw_rules.begin(); it != raw_rules.end(); ++it)
-		delete *it;
-	raw_rules.clear();
 	return (PARSE_SUCCESS);
+}
+
+void
+Parser::clean(void)
+{
+	std::list<std::string *>::iterator		it_s, ite_s;
+
+	if (this->raw_rules.size() > 0)
+	{
+		ite_s = raw_rules.end();
+		for (it_s = this->raw_rules.begin(); it_s != ite_s; ++it_s)
+			delete *it_s;
+		this->raw_rules.clear();
+	}
 }
 
 bool
@@ -301,9 +334,9 @@ Parser::getPartsFromRule(std::string const &r, int const &rule_length, std::stri
 			return (true);
 		}
 		if (!ruleCharValid(r[i]))
-			return (false);
+			return (printError(std::ostringstream().flush() << r << ": " << "Invalid char `" << r[i] << "` at column `" << i << "` !", false));
 	}
-	return (true);
+	return (printError(std::ostringstream().flush() << "[" << r << "] Incomplete rule !", false));
 }
 
 int
@@ -321,8 +354,10 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 	// only checks for character validity
 	if (!getPartsFromRule(r, rule_length, inference, implied))
 		return (0);
-	buildRPN(inference, rpn);
-	buildRPN(implied, implied_rpn);
+	if (!buildRPN(inference, rpn))
+		return (0);
+	if (!buildRPN(implied, implied_rpn))
+		return (0);
 	std::cerr << inference << " [" << rpn << "]" << " => " << implied_rpn << std::endl;
 	rule = new Rule(inference, implied_rpn, rpn);
 	rules->push_back(rule);

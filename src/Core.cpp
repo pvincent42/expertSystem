@@ -18,6 +18,7 @@ Core::Core(int &ac, char **av)
 	}
 	for (j = 1; j < ac; ++j)
 	{
+		this->parser.clean();
 		std::cout << "----- " << av[j] << " -----" << std::endl;
 		for (i = 0; i < 26; ++i)
 		{
