@@ -115,10 +115,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 						verified[c - 'A'] = true;
 					}
 					else
-					{
-						std::cerr << "Wrong fact : [" << c << "]" << std::endl;
-						return (WRONG_FACT);
-					}
+						return (printError(std::ostringstream().flush() << "Wrong fact : [" << c << "]", WRONG_FACT));
 				}
 			}
 			else if (state == GET_QUERIES)
@@ -174,6 +171,13 @@ Parser::ruleCharValid(char const &c)
 		|| c == ')')
 		return (true);
 	return (false);
+}
+
+int
+Parser::printError(std::ostream &msg, int const &code)
+{
+	std::cerr << dynamic_cast<std::ostringstream &>(msg).str() << std::endl;
+	return (code);
 }
 
 int
@@ -286,13 +290,14 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 // ! 33, + 43, | 124, ^ 94 
 
 bool
-Parser::getInferenceFromRule(std::string const &r, int const &rule_length, std::string &inference)
+Parser::getPartsFromRule(std::string const &r, int const &rule_length, std::string &inference, std::string &implied)
 {
 	for (int i = 0; i < rule_length; ++i)
 	{
-		if (r[i] == '=' && i + 1 < rule_length && r[i + 1] == '>')
+		if (r[i] == '=' && i + 1 < rule_length && r[i + 1] == '>' && i + 2 < rule_length && r[i + 2])
 		{
 			inference = r.substr(0, i);
+			implied = r.substr(i + 2, rule_length);
 			return (true);
 		}
 		if (!ruleCharValid(r[i]))
@@ -308,16 +313,18 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 	int const				rule_length = r.length();
 	std::string				inference;
 	std::string				implied;
+	std::string				implied_rpn;
 	std::string				rpn;
 	Rule					*rule;
 
 	i = 0;
 	// only checks for character validity
-	if (!getInferenceFromRule(r, rule_length, inference))
+	if (!getPartsFromRule(r, rule_length, inference, implied))
 		return (0);
 	buildRPN(inference, rpn);
-	std::cerr << "inference: " << inference << " -- RPN: " << rpn << std::endl;
-	rule = new Rule(inference, implied, rpn);
+	buildRPN(implied, implied_rpn);
+	std::cerr << inference << " [" << rpn << "]" << " => " << implied_rpn << std::endl;
+	rule = new Rule(inference, implied_rpn, rpn);
 	rules->push_back(rule);
 	return (1);
 }

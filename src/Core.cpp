@@ -3,21 +3,51 @@
 
 Core::Core(void)
 {
-	int								i;
-	int								j;
-	bool							result;
+	return ;
+}
+
+Core::Core(int &ac, char **av)
+{
+	int								i, j;
 	std::list<Rule *>::iterator		it, ite;
 
-	i = 0;
-	while (i < 26)
+	(void)ac;
+	(void)av;
+	if (ac < 2)
 	{
-		this->facts[i] = false;
-		this->verified[i] = false;
-		i++;
+		std::cerr << "You must provide an input file !" << std::endl;
+		return ;
 	}
 	i = 0;
 	this->parser.parseInputFile("inputs/input1", this->facts, this->verified, &this->queries, &this->rules);
-	this->setFalse();
+	for (j = 1; j < ac; ++j)
+	{
+		std::cout << "----- " << av[j] << " -----" << std::endl;
+		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
+		{
+			for (i = 0; i < 26; ++i)
+			{
+				this->facts[i] = false;
+				this->verified[i] = false;
+			}
+			this->setFalse();
+			ite = rules.end();
+			for (it = rules.begin(); it != ite; it++)
+			{
+				std::cerr << (*it)->rpn << ": ";
+				this->evaluateInference((*it)->rpn);
+				std::cerr << std::endl;
+			}
+		}
+	}
+	return ;
+}
+
+void
+Core::tmp(void)
+{
+	std::list<Rule *>::iterator		it, ite;
+
 	ite = rules.end();
 	j = this->rules.size();
 	std::cout << j << std::endl;
@@ -31,15 +61,8 @@ Core::Core(void)
 		}
 		i++;
 	}
-	return ;
 }
 
-Core::Core(Core const & src)
-{
-	*this = src;
-
-	return ;
-}
 
 bool
 Core::checkValidity(char letter, bool result)
