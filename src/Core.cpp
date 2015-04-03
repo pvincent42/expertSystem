@@ -131,9 +131,10 @@ Core::evaluateInference(std::string const &rpn)
 		i++;
 	}
 	//debug
-	std::list<bool>::iterator		it;
+	std::list<bool>::iterator		it, ite;
 
-	for (it = vs.begin(); it != vs.end(); it++)
+	ite = vs.end();
+	for (it = vs.begin(); it != ite; it++)
 		std::cerr << *it;
 }
 /*
