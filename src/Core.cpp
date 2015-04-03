@@ -11,40 +11,39 @@ Core::Core(int &ac, char **av)
 	int								i, j;
 	std::list<Rule *>::iterator		it, ite;
 
+	(void)ac;
+	(void)av;
 	if (ac < 2)
 	{
 		std::cerr << "You must provide an input file !" << std::endl;
 		return ;
 	}
 	i = 0;
-	this->parser.parseInputFile("inputs/input1", this->facts, this->verified, &this->queries, &this->rules);
+//	this->setFalse();
+	this->parser.parseInputFile("inputs/input4", this->facts, this->verified, &this->queries, &this->rules);
 	for (j = 1; j < ac; ++j)
 	{
 		std::cout << "----- " << av[j] << " -----" << std::endl;
-		for (i = 0; i < 26; ++i)
-		{
-			this->facts[i] = false;
-			this->verified[i] = false;
-		}
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 		{
-			this->setFalse();
-			ite = rules.end();
+			for (i = 0; i < 26; ++i)
+			{
+				if (this->facts[i] != true)
+				{
+					this->facts[i] = false;
+					this->verified[i] = false;
+				}
+			}
+	/*		ite = rules.end();
 			for (it = rules.begin(); it != ite; it++)
 			{
 				std::cerr << (*it)->rpn << ": ";
 				this->evaluateInference((*it)->rpn);
 				std::cerr << std::endl;
-			}
-			if (rules.size() > 0)
-			{
-				ite = rules.end();
-				for (it = rules.begin(); it != ite; ++it)
-					delete *it;
-				rules.clear();
-			}
+			}*/
 		}
 	}
+	this->tmp();
 	return ;
 }
 
@@ -52,18 +51,39 @@ void
 Core::tmp(void)
 {
 	std::list<Rule *>::iterator		it, ite;
+	int								i;
+	int								j;
+	int								k;
 
+	i = 0;
+	j = 0;
+	k = 0;
 	ite = rules.end();
 	j = this->rules.size();
-	std::cout << j << std::endl;
 	while (i < j)
 	{
 		for (it = rules.begin(); it != ite; it++)
 		{
-			std::cerr << (*it)->rpn << ": ";
-			this->evaluateInference((*it)->rpn);
-			std::cerr << "JE TAPE SUR " << (*it)->implied << std::endl;
+			if(this->evaluateInference((*it)->rpn))
+			{
+				std::cerr << (*it)->rpn << " EST VRAI ET DONC ";
+				std::cerr << (*it)->implied << std::endl;
+				while ((*it)->implied[k] && isalpha((*it)->implied[k]))
+				{
+					this->facts[(*it)->implied[k] - 65] = true;
+					k++;
+				}
+				k = 0;
+			}
 		}
+		it = rules.begin();
+		i++;
+	}
+	i = 0;
+		std::cout << "RESULT " << std::endl;
+	while (i < 26)
+	{
+		std::cout << (char)(i + 65) << this->facts[i]  << std::endl;
 		i++;
 	}
 }
@@ -121,7 +141,7 @@ Core::setFact(char letter, bool result)
 	}
 }
 
-void
+int
 Core::evaluateInference(std::string const &rpn)
 {
 	std::list<bool>					vs; // values stack
@@ -153,11 +173,15 @@ Core::evaluateInference(std::string const &rpn)
 			vs.front() = !vs.front();
 		i++;
 	}
-	//debug
-	std::list<bool>::iterator		it;
 
+	return (vs.front());
+	//debug
+/*	std::list<bool>::iterator		it;
 	for (it = vs.begin(); it != vs.end(); it++)
+	{
+		std::cerr << "E";
 		std::cerr << *it;
+	}*/
 }
 
 void

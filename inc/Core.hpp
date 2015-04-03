@@ -21,7 +21,7 @@ class Core
 		std::list<char>		queries;
 		std::list<Rule *>	rules;
 
-		void				evaluateInference(std::string const &rpn);
+		int					evaluateInference(std::string const &rpn);
 		bool				checkValidity(char lettre, bool result);
 		void				setTrue(void);
 		void				tmp(void);
