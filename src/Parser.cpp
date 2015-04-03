@@ -50,10 +50,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		return (READ_FILE_ERROR);
 	}
 	if (stat(filename.c_str(), &buffer) != 0)
-	{
-		std::cerr << "Can't open file: " << filename << std::endl;
-		return (OPEN_FILE_ERROR);
-	}
+		return (printError(std::ostringstream().flush() << "Can't open file: " << filename, OPEN_FILE_ERROR));
 	// read file in a string
 	file = get_file_contents(filename);
 	file_length = file.length();
@@ -107,7 +104,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		{
 			if (state == GET_FACTS)
 			{
-				if (c != ' ' && c != '\t')
+				if (c != ' ' && c != '\t' && c != '\n')
 				{
 					if (c >= 'A' && c <= 'Z')
 					{
@@ -120,15 +117,12 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 			}
 			else if (state == GET_QUERIES)
 			{
-				if (c != ' ' && c != '\t')
+				if (c != ' ' && c != '\t' && c != '\n')
 				{
 					if (c >= 'A' && c <= 'Z')
 						queries->push_back(c);
 					else
-					{
-						std::cerr << "Wrong query : [" << c << "]" << std::endl;
-						return (WRONG_QUERY);
-					}
+						return (printError(std::ostringstream().flush() << "Wrong query : [" << c << "]", WRONG_QUERY));
 				}
 			}
 			else
@@ -153,9 +147,14 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 	for (std::list<char>::iterator it = queries->begin(); it != queries->end(); it++)
 		std::cerr << "query : [" << *it << "]" << std::endl;
 #endif
+	std::list<std::string *>::iterator	it;
 	// parse rules
-	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)
+	for (it = raw_rules.begin(); it != raw_rules.end(); it++)
 		this->parseRawRule(*(*it), rules);
+	// delete raw rules
+	for (it = raw_rules.begin(); it != raw_rules.end(); ++it)
+		delete *it;
+	raw_rules.clear();
 	return (PARSE_SUCCESS);
 }
 
