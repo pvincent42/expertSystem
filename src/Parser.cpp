@@ -157,8 +157,10 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 	}
 	// check queries and facts
 	for (i = 0; i < 26; ++i)
+	{
 		if (facts[i])
 			break;
+	}
 	if (i == 26)
 		return (printError("No facts !", WRONG_FACT));
 	if (queries->size() == 0)
@@ -251,7 +253,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 				{
 					if (os.size() > 0)
 					{
-						for (it = os.begin(); it != os.end(); ++it)
+						for (it = os.begin(), ite = os.end(); it != ite; ++it)
 						{
 							if (*it == op_n)
 								break;
@@ -307,8 +309,7 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	}
 	if (os.size() > 0)
 	{
-		ite = os.end();
-		for (it = os.begin(); it != ite; ++it)
+		for (it = os.begin(), ite = os.end(); it != ite; ++it)
 		{
 			if (*it == op_n)
 				return (printError("Mismatched parenthesis !", 0));
