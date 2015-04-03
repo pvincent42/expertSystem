@@ -11,94 +11,84 @@ Core::Core(int &ac, char **av)
 	int								i, j;
 	std::list<Rule *>::iterator		it, ite;
 
+	(void)ac;
+	(void)av;
 	if (ac < 2)
 	{
 		std::cerr << "You must provide an input file !" << std::endl;
 		return ;
 	}
+	i = 0;
+//	this->setFalse();
+	this->parser.parseInputFile("inputs/input4", this->facts, this->verified, &this->queries, &this->rules);
 	for (j = 1; j < ac; ++j)
 	{
 		this->parser.clean();
 		std::cout << "----- " << av[j] << " -----" << std::endl;
-		for (i = 0; i < 26; ++i)
-		{
-			this->facts[i] = false;
-			this->verified[i] = false;
-		}
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 		{
-			ite = rules.end();
+			for (i = 0; i < 26; ++i)
+			{
+				if (this->facts[i] != true)
+				{
+					this->facts[i] = false;
+					this->verified[i] = false;
+				}
+			}
+	/*		ite = rules.end();
 			for (it = rules.begin(); it != ite; it++)
 			{
 				std::cerr << (*it)->rpn << ": ";
 				this->evaluateInference((*it)->rpn);
 				std::cerr << std::endl;
-			}
-			if (rules.size() > 0)
-			{
-				ite = rules.end();
-				for (it = rules.begin(); it != ite; ++it)
-					delete *it;
-				rules.clear();
-			}
+			}*/
 		}
 	}
-	return ;
-}
-/*
-bool
-Core::checkValidity(char letter, bool result)
-{
-	bool		test1;
-	bool		test2;
-	int const	index = letter - 'A';
-
-	if (this->verified[index] == true)
-		return (this->facts[index] == result);
-	else
-	{
-		this->facts[index] = result;
-		this->verified[index] = true;
-		return (true);
-	}
-}
-
-void
-Core::setTrue(void)
-{
-	std::list<char>::iterator	it = this->queries.begin();
-
-	while (it != this->queries.end())
-	{
-		this->setFact(*it, true);
-		it++;
-	}
+	this->tmp();
 	return ;
 }
 
-bool
-Core::setFact(char letter, bool result)
+void
+Core::tmp(void)
 {
-	int const		index = letter - 'A';
+	std::list<Rule *>::iterator		it, ite;
+	int								i;
+	int								j;
+	int								k;
 
-	if (this->checkValidity(letter, result))
+	i = 0;
+	j = 0;
+	k = 0;
+	ite = rules.end();
+	j = this->rules.size();
+	while (i < j)
 	{
-		this->facts[index] = result;
-		this->verified[index] = true;
-		return (true);
+		for (it = rules.begin(); it != ite; it++)
+		{
+			if(this->evaluateInference((*it)->rpn))
+			{
+				std::cerr << (*it)->rpn << " EST VRAI ET DONC ";
+				std::cerr << (*it)->implied << std::endl;
+				while ((*it)->implied[k] && isalpha((*it)->implied[k]))
+				{
+					this->facts[(*it)->implied[k] - 65] = true;
+					k++;
+				}
+				k = 0;
+			}
+		}
+		it = rules.begin();
+		i++;
 	}
-	else
+	i = 0;
+		std::cout << "RESULT " << std::endl;
+	while (i < 26)
 	{
-		std::cerr << std::boolalpha <<
-			letter << " was first " <<
-			facts[index] <<
-			" and you try to set it at " <<
-			result << std::endl;
-		return (false);
+		std::cout << (char)(i + 65) << this->facts[i]  << std::endl;
+		i++;
 	}
 }
-*/
-void
+int
 Core::evaluateInference(std::string const &rpn)
 {
 	std::list<bool>					vs; // values stack
@@ -130,12 +120,22 @@ Core::evaluateInference(std::string const &rpn)
 			vs.front() = !vs.front();
 		i++;
 	}
+
+	return (vs.front());
+	//debug
+/*	std::list<bool>::iterator		it;
+	for (it = vs.begin(); it != vs.end(); it++)
+	{
+		std::cerr << "E";
+=======
 	//debug
 	std::list<bool>::iterator		it, ite;
 
 	ite = vs.end();
 	for (it = vs.begin(); it != ite; it++)
+>>>>>>> 4b77f5c4318f5c4a348d6af925342bd86d4cdd83
 		std::cerr << *it;
+	}*/
 }
 /*
 void
