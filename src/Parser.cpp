@@ -99,7 +99,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 			state = GET_QUERIES;
 			act = false;
 		}
-		// do not "act" on this character, ['\n', '=', '?']
+		// do not "act" on these characters, ['\n', '=', '?']
 		if (act)
 		{
 			if (state == GET_FACTS)
@@ -140,6 +140,7 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		raw_rules.push_back(current_rule);
 		current_rule = 0;
 	}
+	// check
 #ifdef _DEBUG
 	// print parsed data
 	for (std::list<std::string *>::iterator it = raw_rules.begin(); it != raw_rules.end(); it++)

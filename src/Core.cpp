@@ -26,7 +26,6 @@ Core::Core(int &ac, char **av)
 		}
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 		{
-			this->setFalse();
 			ite = rules.end();
 			for (it = rules.begin(); it != ite; it++)
 			{
@@ -45,7 +44,7 @@ Core::Core(int &ac, char **av)
 	}
 	return ;
 }
-
+/*
 bool
 Core::checkValidity(char letter, bool result)
 {
@@ -97,7 +96,7 @@ Core::setFact(char letter, bool result)
 		return (false);
 	}
 }
-
+*/
 void
 Core::evaluateInference(std::string const &rpn)
 {
@@ -136,7 +135,7 @@ Core::evaluateInference(std::string const &rpn)
 	for (it = vs.begin(); it != vs.end(); it++)
 		std::cerr << *it;
 }
-
+/*
 void
 Core::setFalse(void)
 {
@@ -151,13 +150,6 @@ Core::setFalse(void)
 			this->setFact(i, false);
 		i++;
 	}
-}
-
-void
-Core::addRule(Rule *rule)
-{
-	this->rules.push_back(rule);
-	return ;
 }
 
 std::list <Rule *>
@@ -177,49 +169,7 @@ Core::getRule(char letter)
 	}
 	return resultList;
 }
-
-bool
-Core::getOr(bool l1, bool l2, bool neg1, bool neg2)
-{
-	return (((l1 + neg1) % 2) || ((l2 + neg2) % 2));
-}
-
-bool
-Core::getOr(char l1, char l2, bool neg1, bool neg2)
-{
-	return (((facts[l1 - 'A'] + neg1) % 2) || ((facts[l2 - 'A'] + neg2) % 2));
-}
-
-bool
-Core::getXor(bool l1, bool l2, bool neg1, bool neg2)
-{
-	return (((l1 + neg1) % 2) + ((l2 + neg2) % 2) % 2);
-}
-
-bool
-Core::getXor(char l1, char l2, bool neg1, bool neg2)
-{
-	return (((facts[l1 - 'A'] + neg1) % 2) + ((facts[l2 - 'A'] + neg2) % 2) % 2);
-}
-
-bool
-Core::getAnd(bool l1, bool l2, bool neg1, bool neg2)
-{
-	return (((l1 + neg1) % 2) && ((l2 + neg2) % 2));
-}
-
-bool
-Core::getAnd(char l1, char l2, bool neg1, bool neg2)
-{
-	return (((facts[l1 - 'A'] + neg1) % 2) && ((facts[l2 - 'A'] + neg2) % 2));
-}
-
-bool
-Core::getState(char letter)
-{
-	return (facts[toupper(letter) - 'A']);
-}
-
+*/
 Core::~Core(void)
 {
 	return ;
@@ -255,7 +205,7 @@ operator<<(std::ostream &o, Core const &i)
 		++j;
 	}
 	j = 0;
-	o << "\nListe des règles :\n";
+	o << "\nRules list :\n";
 	while (p != i.rules.end())
 	{
 
