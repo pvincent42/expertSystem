@@ -4,6 +4,8 @@
 Core::Core(void)
 {
 	int								i;
+	int								j;
+	bool							result;
 	std::list<Rule *>::iterator		it, ite;
 
 	i = 0;
@@ -13,14 +15,21 @@ Core::Core(void)
 		this->verified[i] = false;
 		i++;
 	}
+	i = 0;
 	this->parser.parseInputFile("inputs/input1", this->facts, this->verified, &this->queries, &this->rules);
 	this->setFalse();
 	ite = rules.end();
-	for (it = rules.begin(); it != ite; it++)
+	j = this->rules.size();
+	std::cout << j << std::endl;
+	while (i < j)
 	{
-		std::cerr << (*it)->rpn << ": ";
-		this->evaluateInference((*it)->rpn);
-		std::cerr << std::endl;
+		for (it = rules.begin(); it != ite; it++)
+		{
+			std::cerr << (*it)->rpn << ": ";
+			this->evaluateInference((*it)->rpn);
+			std::cerr << "JE TAPE SUR " << (*it)->implied << std::endl;
+		}
+		i++;
 	}
 	return ;
 }
