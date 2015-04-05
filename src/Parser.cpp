@@ -248,7 +248,7 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 			{
 				if (e[i - 1] == opr[j] || e[i + 1] == opr[j])
 				{
-					if (len + 1 <= 3)
+					if (len + 1 > 3)
 						error = ".. " + e.substr(i - 1, 3) + " ..";
 					else
 						error = e;
