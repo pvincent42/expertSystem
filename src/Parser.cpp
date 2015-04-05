@@ -333,14 +333,10 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 				}
 			}
 		}
-		if (err == 1)
+		if (err)
 		{
 			error = len > 2 ? e.substr(i - 2, 3) : e;
 			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));
-		}
-		else if (err == 2)
-		{
-
 		}
 	}
 	return (true);
