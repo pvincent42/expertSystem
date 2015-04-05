@@ -19,37 +19,24 @@ Core::Core(int &ac, char **av)
 		return ;
 	}
 	i = 0;
-//	this->setFalse();
-	this->parser.parseInputFile("inputs/input4", this->facts, this->verified, &this->queries, &this->rules);
+	// this->parser.parseInputFile("inputs/input4", this->facts, this->verified, &this->queries, &this->rules);
 	for (j = 1; j < ac; ++j)
 	{
 		this->parser.clean();
+		for (i = 0; i < 26; ++i)
+		{
+			this->facts[i] = false;
+			this->verified[i] = false;
+		}
 		std::cout << "----- " << av[j] << " -----" << std::endl;
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
-		{
-			for (i = 0; i < 26; ++i)
-			{
-				if (this->facts[i] != true)
-				{
-					this->facts[i] = false;
-					this->verified[i] = false;
-				}
-			}
-	/*		ite = rules.end();
-			for (it = rules.begin(); it != ite; it++)
-			{
-				std::cerr << (*it)->rpn << ": ";
-				this->evaluateInference((*it)->rpn);
-				std::cerr << std::endl;
-			}*/
-		}
+			this->evaluate_input();
 	}
-	this->tmp();
 	return ;
 }
 
 void
-Core::tmp(void)
+Core::evaluate_input(void)
 {
 	std::list<Rule *>::iterator		it, ite;
 	int								i;
@@ -57,37 +44,37 @@ Core::tmp(void)
 	int								k;
 
 	i = 0;
-	j = 0;
-	k = 0;
-	ite = rules.end();
 	j = this->rules.size();
 	while (i < j)
 	{
-		for (it = rules.begin(); it != ite; it++)
+		it = rules.begin();
+		ite = rules.end();
+		while (it != ite)
 		{
-			if(this->evaluateInference((*it)->rpn))
+			if (this->evaluateInference((*it)->rpn))
 			{
 				std::cerr << (*it)->rpn << " EST VRAI ET DONC ";
 				std::cerr << (*it)->implied << std::endl;
+				k = 0;
 				while ((*it)->implied[k] && isalpha((*it)->implied[k]))
 				{
 					this->facts[(*it)->implied[k] - 65] = true;
 					k++;
 				}
-				k = 0;
 			}
+			++it;
 		}
-		it = rules.begin();
 		i++;
 	}
 	i = 0;
-		std::cout << "RESULT " << std::endl;
+	std::cout << "----- RESULTS -----" << std::endl;
 	while (i < 26)
 	{
-		std::cout << (char)(i + 65) << this->facts[i]  << std::endl;
+		std::cout << (char)(i + 65) << ' ' << this->facts[i] << std::endl;
 		i++;
 	}
 }
+
 int
 Core::evaluateInference(std::string const &rpn)
 {
@@ -120,22 +107,7 @@ Core::evaluateInference(std::string const &rpn)
 			vs.front() = !vs.front();
 		i++;
 	}
-
 	return (vs.front());
-	//debug
-/*	std::list<bool>::iterator		it;
-	for (it = vs.begin(); it != vs.end(); it++)
-	{
-		std::cerr << "E";
-=======
-	//debug
-	std::list<bool>::iterator		it, ite;
-
-	ite = vs.end();
-	for (it = vs.begin(); it != ite; it++)
->>>>>>> 4b77f5c4318f5c4a348d6af925342bd86d4cdd83
-		std::cerr << *it;
-	}*/
 }
 /*
 void

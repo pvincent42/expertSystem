@@ -22,7 +22,7 @@ class Core
 		std::list<Rule *>	rules;
 
 		int					evaluateInference(std::string const &rpn);
-		void				tmp(void);
+		void				evaluate_input(void);
 		// bool				checkValidity(char lettre, bool result);
 		// void				setTrue(void);
 		// void				setFalse(void);
