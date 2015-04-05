@@ -28,7 +28,7 @@ Core::Core(int &ac, char **av)
 			this->facts[i] = false;
 			this->verified[i] = false;
 		}
-		std::cout << "----- " << av[j] << " -----" << std::endl;
+		std::cerr << "----- " << av[j] << " -----" << std::endl;
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 			this->evaluate_input();
 	}
@@ -53,24 +53,33 @@ Core::evaluate_input(void)
 		{
 			if (this->evaluateInference((*it)->rpn))
 			{
-				std::cerr << (*it)->rpn << " EST VRAI ET DONC ";
-				std::cerr << (*it)->implied << std::endl;
+				std::cerr << (*it)->rpn << " is true, therefore ";
 				k = 0;
 				while ((*it)->implied[k] && isalpha((*it)->implied[k]))
 				{
+					std::cerr << (*it)->implied[k];
+					if (((*it)->implied[k + 1] && isalpha((*it)->implied[k + 1]))
+						&& ((*it)->implied[k + 2] && !isalpha((*it)->implied[k + 2])))
+						std::cerr << " and ";
+					else if ((*it)->implied[k + 1] && isalpha((*it)->implied[k + 1]))
+						std::cerr << ", ";
 					this->facts[(*it)->implied[k] - 65] = true;
 					k++;
 				}
+				if (k > 1)
+					std::cerr << " are true." << std::endl;
+				else if (k == 1)
+					std::cerr << " is true." << std::endl;
 			}
 			++it;
 		}
 		i++;
 	}
 	i = 0;
-	std::cout << "----- RESULTS -----" << std::endl;
+	std::cerr << "----- RESULTS -----" << std::endl;
 	while (i < 26)
 	{
-		std::cout << (char)(i + 65) << ' ' << this->facts[i] << std::endl;
+		std::cerr << (char)(i + 65) << ' ' << this->facts[i] << std::endl;
 		i++;
 	}
 }

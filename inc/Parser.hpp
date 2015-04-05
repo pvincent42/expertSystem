@@ -17,7 +17,7 @@ class Parser
 		Parser(void);
 		~Parser(void);
 		int								parseInputFile(std::string const &filename, bool *facts, bool *verified, std::list<char> *queries, std::list<Rule *> *rules);
-		int								parseRawRule(std::string const &rule, std::list<Rule *> *rules);
+		int								parseRawRule(std::string const &rule, std::list<Rule *> *rules, int const &number);
 		void							clean(void);
 
 		Parser & operator = (Parser const & rhs);
@@ -30,6 +30,7 @@ class Parser
 		int								buildRPN(std::string const &f, std::string &rpn);
 		int								printError(std::ostream &msg, int const &code);
 		int								printError(std::string const &msg, int const &code);
+		bool							check_syntax_error(std::string const &e, int const &rule_number);
 
 };
 

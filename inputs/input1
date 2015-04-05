@@ -15,7 +15,7 @@ A | B => C # A or B implies C
 #A + !B => F # A and not B implies F
 C | !G => H # C or not G implies H
 V ^ W => X # V xor W implies X
-A + B => Y + Z # A and B implies Y and Z
+A + B => Y + Z + W # A and B implies Y and Z
 A + B => J
 J + A => F
 # hardcore rules (nonsense, just for debugging the parser)

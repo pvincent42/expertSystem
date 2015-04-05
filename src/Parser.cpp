@@ -173,9 +173,13 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		std::cerr << "query : [" << *it_c << "]" << std::endl;
 #endif
 	// parse rules
+	i = 1;
 	for (it_s = raw_rules.begin(); it_s != raw_rules.end(); it_s++)
-		if (!this->parseRawRule(*(*it_s), rules))
+	{
+		if (!this->parseRawRule(*(*it_s), rules, i))
 			return (PARSE_FAIL);
+		++i;
+	}
 	// delete raw rules
 	return (PARSE_SUCCESS);
 }
@@ -220,6 +224,47 @@ Parser::printError(std::string const &msg, int const &code)
 {
 	std::cerr << msg << std::endl;
 	return (code);
+}
+
+bool
+Parser::check_syntax_error(std::string const &e, int const &rule_number)
+{
+	int						i, j;
+	int						len = e.length() - 1;
+	static int const		op_n = 3;
+	static char const		opr[op_n] = {'+', '|', '^'};
+	bool					implied_symbol_found = false;
+	std::string				error;
+
+	for (i = 1; i < len; ++i)
+	{
+		// iterate characters to check
+		for (j = 0; j < op_n; ++j)
+			if (e[i] == opr[j])
+				break;
+		if (j != op_n)
+		{
+			for (j = 0; j < op_n; ++j)
+			{
+				if (e[i - 1] == opr[j] || e[i + 1] == opr[j])
+				{
+					if (len + 1 <= 3)
+						error = ".. " + e.substr(i - 1, 3) + " ..";
+					else
+						error = e;
+					return (printError(std::ostringstream().flush() << "Syntax error in rule `"
+																	<< rule_number
+																	<< "` -> ["
+																	<< error
+																	<< "] at column `"
+																	<< i
+																	<< "`"
+																	, false));
+				}
+			}
+		}
+	}
+	return (true);
 }
 
 // at this point all characters are valid
@@ -346,7 +391,7 @@ Parser::getPartsFromRule(std::string const &r, int const &rule_length, std::stri
 }
 
 int
-Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
+Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules, int const &number)
 {
 	int						i;
 	int const				rule_length = r.length();
@@ -359,6 +404,10 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules)
 	i = 0;
 	// only checks for character validity
 	if (!getPartsFromRule(r, rule_length, inference, implied))
+		return (0);
+	if (!check_syntax_error(inference, number))
+		return (0);
+	if (!check_syntax_error(implied, number))
 		return (0);
 	if (!buildRPN(inference, rpn))
 		return (0);
