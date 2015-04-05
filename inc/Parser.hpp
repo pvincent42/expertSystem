@@ -31,7 +31,6 @@ class Parser
 		int								printError(std::ostream &msg, int const &code);
 		int								printError(std::string const &msg, int const &code);
 		bool							check_syntax_error(std::string const &e, int const &rule_number);
-
 };
 
 std::ostream			&operator<<(std::ostream &o, Parser const &i);
