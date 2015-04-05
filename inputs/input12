@@ -1,0 +1,6 @@
+^A => F ## ^ en opérateur unaire mal traité
+^C+D => E ## Meme problème en plus complexe
+
+=CDA
+
+?EF
