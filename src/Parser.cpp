@@ -249,9 +249,9 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 		}
 	}
 	if (len > 1 && isalpha(e[0]) && isalpha(e[1]))
-		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(0, 2) + " .." << "] " << s2 << " `0`", false));
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(0, 2) << "` " << s2 << " `0`", false));
 	if (len > 1 && isalpha(e[len - 1]) && isalpha(e[len - 2]))
-		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(len - 2, 2) + " .." << "] " << s2 << " `" << len - 1 << "`", false));
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(len - 2, 2) << "` " << s2 << " `" << len - 1 << "`", false));
 	if (len > 2)
 	{
 		for (i = 1; i < len - 1; ++i)
@@ -264,14 +264,14 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 	for (j = 0; j < op_n[0]; ++j)
 	{
 		if (e[0] == opr[j])
-			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(0, 2) + " .." << "] " << s2 << " `0`", false));
+			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(0, 2) << "` " << s2 << " `0`", false));
 		if (e[len - 1] == opr[j])
-			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(len - 2, 2) + " .." << "] " << s2 << " `" << len - 1 << "`", false));
+			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(len - 2, 2) << "` " << s2 << " `" << len - 1 << "`", false));
 	}
 	if (e[len - 1] == opr[5] || e[len - 1] == opr[4])
-		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(len - 2, 2) + " .." << "] " << s2 << " `" << len - 1 << "`", false));
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(len - 2, 2) << "` " << s2 << " `" << len - 1 << "`", false));
 	if (e[0] == opr[4])
-		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(0, 2) + " .." << "] " << s2 << " `0`", false));
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(0, 2) << "` " << s2 << " `0`", false));
 	if (len > 1)
 	{
 		err = 0;
@@ -336,8 +336,8 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 		}
 		if (err)
 		{
-			error = len > 2 ? ".. " + e.substr(i - 1, 3) + " .." : e;
-			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << error << "] " << s2 << " `" << i << "`", false));
+			error = len > 2 ? e.substr(i - 1, 3) : e;
+			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));
 		}
 	}
 	return (true);
