@@ -253,7 +253,9 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 				{
 					if (os.size() > 0)
 					{
-						for (it = os.begin(), ite = os.end(); it != ite; ++it)
+						it = os.begin();
+						ite = os.end();
+						while (it != ite)
 						{
 							if (*it == op_n)
 								break;
@@ -261,8 +263,10 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 								|| (opr[j][2] && opr[j][1] < opr[*it][1]))
 							{
 								rpn += opr[*it][0];
-								os.erase(it);
+								os.erase(it++);
 							}
+							else
+								++it;
 						}
 						os.push_front(j);
 					}
@@ -309,12 +313,13 @@ Parser::buildRPN(std::string const &f, std::string &rpn)
 	}
 	if (os.size() > 0)
 	{
-		for (it = os.begin(), ite = os.end(); it != ite; ++it)
+		// ite = os.end()
+		for (it = os.begin(); it != os.end(); it = os.begin())
 		{
 			if (*it == op_n)
 				return (printError("Mismatched parenthesis !", 0));
 			rpn += opr[*it][0];
-			os.erase(it);
+			os.pop_front();
 		}
 	}
 	//
