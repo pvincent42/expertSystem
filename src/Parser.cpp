@@ -257,7 +257,7 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 		for (i = 1; i < len - 1; ++i)
 		{
 			if (isalpha(e[i]) && (isalpha(e[i - 1]) || isalpha(e[i + 1])))
-				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(i - 1, 3) + " .." << "] " << s2 << " `" << i << "`", false));
+				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(i - 1, 3) << "` " << s2 << " `" << i << "`", false));
 		}
 	}
 	// check operators		
@@ -325,7 +325,7 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 				{
 					for (j = 0; j < op_n[0]; ++j)
 					{
-						if (e[i - 1] == opr[j] || e[i + 1] == opr[j])
+						if (e[i + 1] == opr[j])
 						{
 							err = 1;
 							break;
@@ -336,7 +336,7 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 		}
 		if (err)
 		{
-			error = len > 2 ? e.substr(i - 1, 3) : e;
+			error = len > 2 ? e.substr(i - 2, 3) : e;
 			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));
 		}
 	}
