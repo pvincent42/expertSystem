@@ -236,7 +236,6 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 	std::string				error;
 	std::string const		s1 = "Syntax error in rule";
 	std::string const		s2 = "at column";
-	std::string const		s3 = "Operator alone !";
 	int						err;
 
 	// check letters
@@ -245,7 +244,7 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 		for (i = 0; i < op_n[2]; ++i)
 		{
 			if (e[0] == opr[i])
-				return (printError(std::ostringstream().flush() << s3, false));
+				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(0, 1) << "` " << s2 << " `0`", false));
 		}
 	}
 	if (len > 1 && isalpha(e[0]) && isalpha(e[1]))
@@ -334,10 +333,14 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 				}
 			}
 		}
-		if (err)
+		if (err == 1)
 		{
 			error = len > 2 ? e.substr(i - 2, 3) : e;
 			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));
+		}
+		else if (err == 2)
+		{
+
 		}
 	}
 	return (true);
