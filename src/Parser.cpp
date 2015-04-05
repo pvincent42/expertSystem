@@ -230,38 +230,114 @@ bool
 Parser::check_syntax_error(std::string const &e, int const &rule_number)
 {
 	int						i, j;
-	int						len = e.length() - 1;
-	static int const		op_n = 3;
-	static char const		opr[op_n] = {'+', '|', '^'};
-	bool					implied_symbol_found = false;
+	int						len = e.length();
+	static int const		op_n[3] = {3, 5, 6};
+	static char const		opr[6] = {'+', '|', '^', ')', '(', '!'};
 	std::string				error;
+	std::string const		s1 = "Syntax error in rule";
+	std::string const		s2 = "at column";
+	std::string const		s3 = "Operator alone !";
+	int						err;
 
-	for (i = 1; i < len; ++i)
+	// check letters
+	if (len == 1)
 	{
-		// iterate characters to check
-		for (j = 0; j < op_n; ++j)
-			if (e[i] == opr[j])
-				break;
-		if (j != op_n)
+		for (i = 0; i < op_n[2]; ++i)
 		{
-			for (j = 0; j < op_n; ++j)
+			if (e[0] == opr[i])
+				return (printError(std::ostringstream().flush() << s3, false));
+		}
+	}
+	if (len > 1 && isalpha(e[0]) && isalpha(e[1]))
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(0, 2) + " .." << "] " << s2 << "`0`", false));
+	if (len > 1 && isalpha(e[len - 1]) && isalpha(e[len - 2]))
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(len - 2, 2) + " .." << "] " << s2 << " `" << len - 1 << "`", false));
+	if (len > 2)
+	{
+		for (i = 1; i < len - 1; ++i)
+		{
+			if (isalpha(e[i]) && (isalpha(e[i - 1]) || isalpha(e[i + 1])))
+				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(i - 1, 3) + " .." << "] " << s2 << " `" << i << "`", false));
+		}
+	}
+	// check operators		
+	for (j = 0; j < op_n[0]; ++j)
+	{
+		if (e[0] == opr[j])
+			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(0, 2) + " .." << "] " << s2 << "`0`", false));
+		if (e[len - 1] == opr[j])
+			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(len - 2, 2) + " .." << "] " << s2 << " `" << len - 1 << "`", false));
+	}
+	if (e[len - 1] == opr[5] || e[len - 1] == opr[4])
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(len - 2, 2) + " .." << "] " << s2 << " `" << len - 1 << "`", false));
+	if (e[0] == opr[4])
+		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << ".. " + e.substr(0, 2) + " .." << "] " << s2 << "`0`", false));
+	if (len > 1)
+	{
+		err = 0;
+		for (i = 1; i < len - 1; ++i)
+		{
+			// iterate characters to check, break to process it when found
+			for (j = 0; j < op_n[2]; ++j)
+				if (e[i] == opr[j])
+					break;
+			if (j < op_n[0]) // '+' '|' '^'
 			{
-				if (e[i - 1] == opr[j] || e[i + 1] == opr[j])
+				for (j = 0; j < op_n[0]; ++j)
 				{
-					if (len + 1 > 3)
-						error = ".. " + e.substr(i - 1, 3) + " ..";
-					else
-						error = e;
-					return (printError(std::ostringstream().flush() << "Syntax error in rule `"
-																	<< rule_number
-																	<< "` -> ["
-																	<< error
-																	<< "] at column `"
-																	<< i
-																	<< "`"
-																	, false));
+					if (e[i - 1] == opr[j] || e[i + 1] == opr[j])
+					{
+						err = 1;
+						break;
+					}
 				}
 			}
+			else if (j == 3) // ')'
+			{
+				if (e[i - 1] == opr[5] || e[i - 1] == opr[4])
+					err = 1;
+				else
+				{
+					for (j = 0; j < op_n[0]; ++j)
+					{
+						if (e[i - 1] == opr[j])
+						{
+							err = 1;
+							break;
+						}
+					}
+				}
+			}
+			else if (j == 4) // '('
+			{
+				if (e[i - 1] == opr[3]) // ')('
+					err = 1;
+				else if (e[i + 1] == opr[3]) // '()'
+					err = 1;
+			}
+			else if (j == 5) // '!'
+			{
+				if (e[i - 1] == opr[3]) // ')!'
+					err = 1;
+				else if (e[i + 1] == opr[3]) // '!)'
+					err = 1;
+				else
+				{
+					for (j = 0; j < op_n[0]; ++j)
+					{
+						if (e[i - 1] == opr[j] || e[i + 1] == opr[j])
+						{
+							err = 1;
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (err)
+		{
+			error = len > 2 ? ".. " + e.substr(i - 1, 3) + " .." : e;
+			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> [" << error << "] " << s2 << " `" << i << "`", false));
 		}
 	}
 	return (true);
