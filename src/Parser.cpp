@@ -468,9 +468,7 @@ Parser::getPartsFromRule(std::string const &r, int const &rule_length, std::stri
 	}
 	return (printError(std::ostringstream().flush() << "[" << r << "] Incomplete rule !", false));
 }
-/*
-				error = len > 2 ? e.substr(i - 1 >= 0 ? i - 1 : 0, len - i > 2 ? 3 : len - i) : e;
-				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));*/
+
 bool
 Parser::check_for_bonus_in_implied(std::string const &implied, int const &number)
 {
