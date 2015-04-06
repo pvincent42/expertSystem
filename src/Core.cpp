@@ -19,7 +19,6 @@ Core::Core(int &ac, char **av)
 		return ;
 	}
 	i = 0;
-	// this->parser.parseInputFile("inputs/input4", this->facts, this->verified, &this->queries, &this->rules);
 	for (j = 1; j < ac; ++j)
 	{
 		this->parser.clean();
@@ -42,6 +41,8 @@ Core::evaluate_input(void)
 	int								i;
 	int								j;
 	int								k;
+	std::string						implied;
+	int								len;
 
 	i = 0;
 	j = this->rules.size();
@@ -54,16 +55,23 @@ Core::evaluate_input(void)
 			if (this->evaluateInference((*it)->rpn))
 			{
 				std::cerr << (*it)->rpn << " is true, therefore ";
-				k = 0;
-				while ((*it)->implied[k] && isalpha((*it)->implied[k]))
+				implied.clear();
+				len = (*it)->implied.length();
+				for (k = 0; k < len; ++k)
 				{
-					std::cerr << (*it)->implied[k];
-					if (((*it)->implied[k + 1] && isalpha((*it)->implied[k + 1]))
-						&& ((*it)->implied[k + 2] && !isalpha((*it)->implied[k + 2])))
-						std::cerr << " and ";
-					else if ((*it)->implied[k + 1] && isalpha((*it)->implied[k + 1]))
+					if (isalpha((*it)->implied[k]))
+						implied += (*it)->implied[k];
+				}
+				len = implied.length();
+				k = 0;
+				while (k < len)
+				{
+					std::cerr << implied[k];
+					if (implied[k + 1] && implied[k + 2])
 						std::cerr << ", ";
-					this->facts[(*it)->implied[k] - 65] = true;
+					else if (implied[k + 1])
+						std::cerr << " and ";
+					this->facts[implied[k] - 65] = true;
 					k++;
 				}
 				if (k > 1)
@@ -134,8 +142,8 @@ Core::setFalse(void)
 		i++;
 	}
 }
-
-std::list <Rule *>
+*/
+/*std::list <Rule *>
 Core::getRule(char letter)
 {
 	std::size_t					result;

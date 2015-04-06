@@ -161,8 +161,6 @@ Parser::parseInputFile(std::string const &filename, bool *facts, bool *verified,
 		if (facts[i])
 			break;
 	}
-	if (i == 26)
-		return (printError("No facts !", WRONG_FACT));
 	if (queries->size() == 0)
 		return (printError("No queries !", WRONG_QUERY));
 #ifdef _DEBUG

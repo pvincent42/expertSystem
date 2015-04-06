@@ -10,7 +10,7 @@ class Rule
 		// rule example : A + B + (C | D) => G + E
 		std::string			rpn; // reverse polish notation of the inference	: "AB+CD|+"
 		std::string			inference; // inference, left part of the rule		: "A+B+(C|D)"
-		std::string			implied; // right part of the rule					: "G+E"
+		std::string			implied; // right part of the rule					: "GE+"
 
 		Rule(void);
 		Rule(std::string const & inference, std::string const & implied);
