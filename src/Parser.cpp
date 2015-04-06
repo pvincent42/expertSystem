@@ -468,6 +468,32 @@ Parser::getPartsFromRule(std::string const &r, int const &rule_length, std::stri
 	}
 	return (printError(std::ostringstream().flush() << "[" << r << "] Incomplete rule !", false));
 }
+/*
+				error = len > 2 ? e.substr(i - 1 >= 0 ? i - 1 : 0, len - i > 2 ? 3 : len - i) : e;
+				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));*/
+bool
+Parser::check_for_bonus_in_implied(std::string const &implied, int const &number)
+{
+	int					i, j;
+	int					len;
+	static int const	op_n = 3;
+	static char const	bonus_opr[op_n] = {'!', '|', '^'};
+	std::string			error;
+
+	len = implied.length();
+	for (i = 0; i < len; ++i)
+	{
+		for (j = 0; j < op_n; ++j)
+		{
+			if (implied[i] == bonus_opr[j])
+			{
+				error = len > 2 ? implied.substr(i - 1 >= 0 ? i - 1 : 0, len - i > 2 ? 3 : len - i) : implied;
+				return (printError(std::ostringstream().flush() << "Invalid bonus operator in implied part of rule `" << number << "` -> `" << error << "` at column `" << i << "`", false));
+			}
+		}
+	}
+	return (true);
+}
 
 int
 Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules, int const &number)
@@ -487,6 +513,8 @@ Parser::parseRawRule(std::string const &r, std::list<Rule *> *rules, int const &
 	if (!check_syntax_error(inference, number))
 		return (0);
 	if (!check_syntax_error(implied, number))
+		return (0);
+	if (!check_for_bonus_in_implied(implied, number))
 		return (0);
 	if (!buildRPN(inference, rpn))
 		return (0);
