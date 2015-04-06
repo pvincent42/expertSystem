@@ -1,5 +1,5 @@
-A|BC => D ## probleme lorsque plusieurs lettres se suivent sans opérateur au milieu
+	 	 	   	 			 A	+	 	  B	 +	   	C  	 		 	 	=> 	 	 	 	 D ## probleme lorsque plusieurs lettres se suivent sans opérateur au milieu
 
-=C
+=	 	 C	 	 	B			   A  D	 	 	 	 	 	
 
-?D
+	 	 	?	 	 	 			 	  D
