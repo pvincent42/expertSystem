@@ -269,7 +269,7 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 	}
 	if (e[len - 1] == opr[5] || e[len - 1] == opr[4])
 		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(len - 2, 2) << "` " << s2 << " `" << len - 1 << "`", false));
-	if (e[0] == opr[4])
+	if (e[0] == opr[3])
 		return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << e.substr(0, 2) << "` " << s2 << " `0`", false));
 	if (len > 1)
 	{
