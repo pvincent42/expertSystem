@@ -157,6 +157,7 @@ Core::evaluateInference(std::string const &rpn)
 
 Core::~Core(void)
 {
+	this->clean();
 	return ;
 }
 
