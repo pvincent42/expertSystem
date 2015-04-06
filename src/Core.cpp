@@ -139,41 +139,7 @@ Core::evaluateInference(std::string const &rpn)
 	}
 	return (vs.front());
 }
-/*
-void
-Core::setFalse(void)
-{
-	char				i;
-	std::list<Rule *>	result;
 
-	i = 'A';
-	while (i <= 'Z')
-	{
-		result = this->getRule(i);
-		if (result.size() == 0 && !this->verified[i - 65])
-			this->setFact(i, false);
-		i++;
-	}
-}
-*/
-/*std::list <Rule *>
-Core::getRule(char letter)
-{
-	std::size_t					result;
-	std::list<Rule *>			resultList;
-	std::list<Rule *>::iterator	p = this->rules.begin();
-
-	letter = toupper(letter);
-	while (p != this->rules.end())
-	{
-		result = (*p)->implied.find(letter);
-		if (result != std::string::npos)
-			resultList.push_back(*p);
-		++p;
-	}
-	return resultList;
-}
-*/
 Core::~Core(void)
 {
 	return ;
