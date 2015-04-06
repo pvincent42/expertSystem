@@ -8,7 +8,7 @@ Core::Core(void)
 
 Core::Core(int &ac, char **av)
 {
-	int								i, j;
+	int								j;
 	std::list<Rule *>::iterator		it, ite;
 	std::list<char>::iterator		qit;
 
@@ -19,15 +19,10 @@ Core::Core(int &ac, char **av)
 		std::cerr << "You must provide an input file !" << std::endl;
 		return ;
 	}
-	i = 0;
 	for (j = 1; j < ac; ++j)
 	{
 		this->parser.clean();
-		for (i = 0; i < 26; ++i)
-		{
-			this->facts[i] = false;
-			this->verified[i] = false;
-		}
+		this->clean();
 		std::cerr << "----- " << av[j] << " -----" << std::endl;
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
 		{
@@ -48,6 +43,26 @@ Core::Core(int &ac, char **av)
 	}
 
 	return ;
+}
+
+void
+Core::clean(void)
+{
+	std::list<Rule *>::iterator		it, ite;
+	int								i;
+
+	for (i = 0; i < 26; ++i)
+	{
+		this->facts[i] = false;
+		this->verified[i] = false;
+	}
+	this->queries.clear();
+	if (this->rules.size() > 0)
+	{
+		for (it = this->rules.begin(), ite = this->rules.end(); it != ite; ++it)
+			delete *it;
+		this->rules.clear();
+	}
 }
 
 void

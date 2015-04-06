@@ -23,16 +23,13 @@ class Core
 
 		int					evaluateInference(std::string const &rpn);
 		void				evaluate_input(void);
-		// bool				checkValidity(char lettre, bool result);
-		// void				setTrue(void);
-		// void				setFalse(void);
-		// bool				setFact(char letter, bool result);
-		// std::list<Rule *>	getRule(char letter);
 
 		Core & operator = (Core const & rhs);
 
 	private:
 		Core(Core const & src);
+
+		void				clean(void);
 };
 
 std::ostream			&operator<<(std::ostream &o, Core const &i);
