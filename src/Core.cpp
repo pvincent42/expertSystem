@@ -10,6 +10,7 @@ Core::Core(int &ac, char **av)
 {
 	int								i, j;
 	std::list<Rule *>::iterator		it, ite;
+	std::list<char>::iterator		qit;
 
 	(void)ac;
 	(void)av;
@@ -29,8 +30,23 @@ Core::Core(int &ac, char **av)
 		}
 		std::cerr << "----- " << av[j] << " -----" << std::endl;
 		if (this->parser.parseInputFile(av[j], this->facts, this->verified, &this->queries, &this->rules) == PARSE_SUCCESS)
+		{
 			this->evaluate_input();
+			qit = this->queries.begin();
+			std::cerr << std::endl;
+			while (qit != this->queries.end())
+			{
+				std::cerr << *qit << " is ";
+				if (this->facts[*qit - 65])
+					std::cerr << "\033[1;32m";
+				else
+					std::cerr << "\033[1;31m";
+				std::cerr << std::boolalpha << this->facts[*qit - 65] << std::endl << "\033[0m";
+				qit++;
+			}
+		}
 	}
+
 	return ;
 }
 
@@ -46,6 +62,7 @@ Core::evaluate_input(void)
 
 	i = 0;
 	j = this->rules.size();
+	std::cerr << std::endl;
 	while (i < j)
 	{
 		it = rules.begin();
@@ -54,40 +71,36 @@ Core::evaluate_input(void)
 		{
 			if (this->evaluateInference((*it)->rpn))
 			{
-				std::cerr << (*it)->rpn << " is true, therefore ";
-				implied.clear();
-				len = (*it)->implied.length();
-				for (k = 0; k < len; ++k)
+				if (i == j - 1)
 				{
-					if (isalpha((*it)->implied[k]))
-						implied += (*it)->implied[k];
+					std::cerr << (*it)->rpn << " is true, therefore ";
+					implied.clear();
+					len = (*it)->implied.length();
+					for (k = 0; k < len; ++k)
+					{
+						if (isalpha((*it)->implied[k]))
+							implied += (*it)->implied[k];
+					}
+					len = implied.length();
+					k = 0;
+					while (k < len)
+					{
+						std::cerr << implied[k];
+						if (implied[k + 1] && implied[k + 2])
+							std::cerr << ", ";
+						else if (implied[k + 1])
+							std::cerr << " and ";
+						this->facts[implied[k] - 65] = true;
+						k++;
+					}
+					if (k > 1)
+						std::cerr << " are true." << std::endl;
+					else if (k == 1)
+						std::cerr << " is true." << std::endl;
 				}
-				len = implied.length();
-				k = 0;
-				while (k < len)
-				{
-					std::cerr << implied[k];
-					if (implied[k + 1] && implied[k + 2])
-						std::cerr << ", ";
-					else if (implied[k + 1])
-						std::cerr << " and ";
-					this->facts[implied[k] - 65] = true;
-					k++;
-				}
-				if (k > 1)
-					std::cerr << " are true." << std::endl;
-				else if (k == 1)
-					std::cerr << " is true." << std::endl;
 			}
 			++it;
 		}
-		i++;
-	}
-	i = 0;
-	std::cerr << "----- RESULTS -----" << std::endl;
-	while (i < 26)
-	{
-		std::cerr << (char)(i + 65) << ' ' << this->facts[i] << std::endl;
 		i++;
 	}
 }
