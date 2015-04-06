@@ -293,6 +293,8 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 			{
 				if (e[i - 1] == opr[5] || e[i - 1] == opr[4])
 					err = 1;
+				else if (isalpha(e[i + 1])) // ')A -> )Z'
+					err = 1;
 				else
 				{
 					for (j = 0; j < op_n[0]; ++j)
@@ -311,12 +313,16 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 					err = 1;
 				else if (e[i + 1] == opr[3]) // '()'
 					err = 1;
+				else if (isalpha(e[i - 1])) // 'A( -> Z('
+					err = 1;
 			}
 			else if (j == 5) // '!'
 			{
 				if (e[i - 1] == opr[3]) // ')!'
 					err = 1;
 				else if (e[i + 1] == opr[3]) // '!)'
+					err = 1;
+				else if (isalpha(e[i - 1])) // 'A! -> Z!'
 					err = 1;
 				else
 				{
@@ -330,11 +336,11 @@ Parser::check_syntax_error(std::string const &e, int const &rule_number)
 					}
 				}
 			}
-		}
-		if (err)
-		{
-			error = len > 2 ? e.substr(i - 2, 3) : e;
-			return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));
+			if (err)
+			{
+				error = len > 2 ? e.substr(i - 1 >= 0 ? i - 1 : 0, len - i > 2 ? 3 : len - i) : e;
+				return (printError(std::ostringstream().flush() << s1 << " `" << rule_number << "` -> `" << error << "` " << s2 << " `" << i << "`", false));
+			}
 		}
 	}
 	return (true);
