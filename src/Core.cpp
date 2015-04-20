@@ -86,33 +86,30 @@ Core::evaluate_input(void)
 		{
 			if (this->evaluateInference((*it)->rpn))
 			{
-				if (i == j - 1)
+				std::cerr << (*it)->rpn << " is true, therefore ";
+				implied.clear();
+				len = (*it)->implied.length();
+				for (k = 0; k < len; ++k)
 				{
-					std::cerr << (*it)->rpn << " is true, therefore ";
-					implied.clear();
-					len = (*it)->implied.length();
-					for (k = 0; k < len; ++k)
-					{
-						if (isalpha((*it)->implied[k]))
-							implied += (*it)->implied[k];
-					}
-					len = implied.length();
-					k = 0;
-					while (k < len)
-					{
-						std::cerr << implied[k];
-						if (implied[k + 1] && implied[k + 2])
-							std::cerr << ", ";
-						else if (implied[k + 1])
-							std::cerr << " and ";
-						this->facts[implied[k] - 65] = true;
-						k++;
-					}
-					if (k > 1)
-						std::cerr << " are true." << std::endl;
-					else if (k == 1)
-						std::cerr << " is true." << std::endl;
+					if (isalpha((*it)->implied[k]))
+						implied += (*it)->implied[k];
 				}
+				len = implied.length();
+				k = 0;
+				while (k < len)
+				{
+					std::cerr << implied[k];
+					if (implied[k + 1] && implied[k + 2])
+						std::cerr << ", ";
+					else if (implied[k + 1])
+						std::cerr << " and ";
+					this->facts[implied[k] - 65] = true;
+					k++;
+				}
+				if (k > 1)
+					std::cerr << " are true." << std::endl;
+				else if (k == 1)
+					std::cerr << " is true." << std::endl;
 			}
 			++it;
 		}
